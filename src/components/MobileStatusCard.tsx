@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Image from 'next/image';
-import Loader from './Loader';
+import Loader from './LoadingSpinner';
 
 export interface MobileStatusCardProps {
   title: string;

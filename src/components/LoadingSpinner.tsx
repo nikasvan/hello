@@ -8,7 +8,7 @@ export default function Loader(props: LoaderProps) {
   const { height, width } = props;
 
   return (
-    <Container>
+    <Container width={width} height={height}>
       <Image
         src="/assets/images/MobileLoadingSpinner.png"
         alt="loading"
@@ -19,13 +19,15 @@ export default function Loader(props: LoaderProps) {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<LoaderProps>`
   animation: spin 1500ms linear infinite;
-  width: 20p
-  height: 20px;
+  width: max-content;
+  height: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border-radius: 50%;
 
   @keyframes spin {
     0% {

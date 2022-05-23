@@ -98,7 +98,7 @@ export default function MobileMenu(props: MobileMenuProps) {
             alt="github"
           />
           <MenuItemDescription>
-            <PrimaryText>All Messsages</PrimaryText>
+            <PrimaryText>All Messsagessss</PrimaryText>
             <SecondaryText>View all messages...</SecondaryText>
           </MenuItemDescription>
         </MenuItem>

@@ -100,7 +100,9 @@ export default function Conversations() {
         </Centered>
       )}
       {xmtpStatus === XmtpStatus.ready &&
-        status === ConversationsStatus.loading && <MobileLoadingPage />}
+        status === ConversationsStatus.loading && (
+          <MobileLoadingPage />
+        )}
       <List>
         {sortedByTimestamp(conversations, timestamped).map(
           (peerAddress: string) => {

@@ -42,6 +42,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
         value={inputVal}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        autoFocus={true}
       />
       <SvgContainer inputTextCount={inputTextCount} onClick={clearInput}>
         <TrashCang />

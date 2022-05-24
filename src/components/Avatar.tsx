@@ -3,7 +3,7 @@ import Spinner from '../../public/assets/images/spinner.svg';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Blockies from 'react-blockies';
-import LoadingSpinner from './LoadingSpinner'
+import LoadingSpinner from './LoadingSpinner';
 
 interface AvatarProps {
   address?: string | undefined;
@@ -17,26 +17,34 @@ export default function Avatar(props: AvatarProps) {
   } = useEnsAvatar({ addressOrName: props.address });
 
   if (isFetching || isLoading) {
-    return <LoadingSpinner width={40} height={40}  />;
+    return (
+      <div>
+        <LoadingSpinner width={40} height={40} />
+      </div>
+    );
   }
 
   if (!ensAvatar) {
     return (
-      <Blockies
-        seed={props.address || ''}
-        size={10}
-        scale={4}
-        className={'circle'}
-      />
+      <div>
+        <Blockies
+          seed={props.address || ''}
+          size={10}
+          scale={4}
+          className={'circle'}
+        />
+      </div>
     );
   } else {
     return (
-      <AvatarImage
-        src={ensAvatar}
-        width={props.size === 'large' ? 60 : 40}
-        height={props.size === 'large' ? 60 : 40}
-        alt="user"
-      />
+      <div>
+        <AvatarImage
+          src={ensAvatar}
+          width={props.size === 'large' ? 60 : 40}
+          height={props.size === 'large' ? 60 : 40}
+          alt="user"
+        />
+      </div>
     );
   }
 }

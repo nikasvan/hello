@@ -165,9 +165,9 @@ const Page = styled.div`
     background: linear-gradient(60deg, rgba(16, 8, 23, 92.5%), #100817);
     display: block;
     content: '';
-    height: 100vh;
+    height: 100%;
     width: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;

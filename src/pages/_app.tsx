@@ -1,3 +1,4 @@
+import { providers } from 'ethers';
 import { ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
 import XmtpProvider from 'components/XmtpProvider';
@@ -46,6 +47,9 @@ const wagmi = createClient({
         options: { shimDisconnect: true },
       }),
     ];
+  },
+  provider(config) {
+    return new providers.AlchemyProvider(config.chainId, alchemyKey);
   },
 });
 

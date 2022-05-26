@@ -2,6 +2,7 @@ import { providers } from 'ethers';
 import { ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
 import XmtpProvider from 'components/XmtpProvider';
+import RedirectProvider from 'components/RedirectProvider';
 import { GlobalStyles, theme } from 'styles/global';
 import {
   Provider as WagmiProvider,
@@ -58,10 +59,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <WagmiProvider client={wagmi}>
         <XmtpProvider>
-          <>
-            <GlobalStyles />
-            <Component {...pageProps} />
-          </>
+          <RedirectProvider>
+            <>
+              <GlobalStyles />
+              <Component {...pageProps} />
+            </>
+          </RedirectProvider>
         </XmtpProvider>
       </WagmiProvider>
     </ThemeProvider>

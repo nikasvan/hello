@@ -10,8 +10,8 @@ import Metamask from '../../public/assets/images/Metamask.svg';
 import SignInLink from 'components/Connector';
 import { useIsMetaMask } from 'hooks';
 import { useEffect, useCallback, useState } from 'react';
-import { useRouter } from 'next/router';
 import MobileBetaStatus from 'components/MobileBetaStatus';
+import { useRedirect } from 'hooks';
 
 const highlight = '#9867ce';
 
@@ -19,8 +19,8 @@ export default function Landing() {
   const { disconnect } = useDisconnect();
   const { connect, connectors, activeConnector, isConnected } = useConnect();
   const [clickedConnect, setClickedConnect] = useState<boolean>(false);
-  const router = useRouter();
   const isMetaMask = useIsMetaMask();
+  const { doRedirectBack } = useRedirect();
 
   const metamaskConnector = connectors.find(
     (connector) => connector.id === 'injected'
@@ -50,8 +50,8 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
-    if (isConnected && clickedConnect) router.push('/conversations');
-  }, [isConnected, clickedConnect, router]);
+    if (isConnected && doRedirectBack) doRedirectBack();
+  }, [isConnected, doRedirectBack]);
 
   return (
     <Page>

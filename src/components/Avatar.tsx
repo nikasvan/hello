@@ -1,9 +1,9 @@
+import { useState, useEffect } from 'react';
 import { useEnsAvatar } from 'wagmi';
-import Spinner from '../../public/assets/images/spinner.svg';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Blockies from 'react-blockies';
-import LoadingSpinner from './LoadingSpinner'
+import LoadingSpinner from './LoadingSpinner';
 
 interface AvatarProps {
   address?: string | undefined;
@@ -15,9 +15,14 @@ export default function Avatar(props: AvatarProps) {
     isFetching,
     isLoading,
   } = useEnsAvatar({ addressOrName: props.address });
+  const [showLoading, setShowLoading] = useState<boolean>(true);
 
-  if (isFetching || isLoading) {
-    return <LoadingSpinner width={40} height={40}  />;
+  useEffect(() => {
+    setShowLoading(isFetching || isLoading);
+  }, [isFetching, isLoading]);
+
+  if (showLoading) {
+    return <LoadingSpinner width={40} height={40} />;
   }
 
   if (!ensAvatar) {

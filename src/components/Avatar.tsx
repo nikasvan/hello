@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 import { useEnsAvatar } from 'wagmi';
-import Spinner from '../../public/assets/images/spinner.svg';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Blockies from 'react-blockies';
@@ -15,36 +15,33 @@ export default function Avatar(props: AvatarProps) {
     isFetching,
     isLoading,
   } = useEnsAvatar({ addressOrName: props.address });
+  const [showLoading, setShowLoading] = useState<boolean>(true);
 
-  if (isFetching || isLoading) {
-    return (
-      <div>
-        <LoadingSpinner width={40} height={40} />
-      </div>
-    );
+  useEffect(() => {
+    setShowLoading(isFetching || isLoading);
+  }, [isFetching, isLoading]);
+
+  if (showLoading) {
+    return <LoadingSpinner width={40} height={40} />;
   }
 
   if (!ensAvatar) {
     return (
-      <div>
-        <Blockies
-          seed={props.address || ''}
-          size={10}
-          scale={4}
-          className={'circle'}
-        />
-      </div>
+      <Blockies
+        seed={props.address || ''}
+        size={10}
+        scale={4}
+        className={'circle'}
+      />
     );
   } else {
     return (
-      <div>
-        <AvatarImage
-          src={ensAvatar}
-          width={props.size === 'large' ? 60 : 40}
-          height={props.size === 'large' ? 60 : 40}
-          alt="user"
-        />
-      </div>
+      <AvatarImage
+        src={ensAvatar}
+        width={props.size === 'large' ? 60 : 40}
+        height={props.size === 'large' ? 60 : 40}
+        alt="user"
+      />
     );
   }
 }

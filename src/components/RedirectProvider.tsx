@@ -14,10 +14,14 @@ const RedirectProvider = (props: { children: ReactElement }) => {
     [setRedirectTo, router]
   );
 
-  const doRedirectBack = useCallback(() => {
+  const doRedirectBack = useMemo(() => {
     if (redirectTo) {
-      setRedirectTo(null);
-      router.push(redirectTo);
+      return () => {
+        setRedirectTo(null);
+        router.push(redirectTo);
+      };
+    } else {
+      return null;
     }
   }, [router, redirectTo]);
 

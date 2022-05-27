@@ -12,13 +12,13 @@ import { useIsMetaMask } from 'hooks';
 import { useEffect, useCallback, useState } from 'react';
 import MobileBetaStatus from 'components/MobileBetaStatus';
 import { useRedirect } from 'hooks';
+import { useRouter } from 'next/router';
 
 const highlight = '#9867ce';
 
 export default function Landing() {
-  const { disconnect } = useDisconnect();
+  const router = useRouter();
   const { connect, connectors, activeConnector, isConnected } = useConnect();
-  const [clickedConnect, setClickedConnect] = useState<boolean>(false);
   const isMetaMask = useIsMetaMask();
   const { doRedirectBack } = useRedirect();
 
@@ -36,22 +36,25 @@ export default function Landing() {
 
   const handleClickMetamask = useCallback(() => {
     connect(metamaskConnector);
-    setClickedConnect(true);
   }, []);
 
   const handleClickCoinbase = useCallback(() => {
     connect(coinbaseConnector);
-    setClickedConnect(true);
   }, []);
 
   const handleClickWalletConnect = useCallback(() => {
     connect(walletConnectConnector);
-    setClickedConnect(true);
   }, []);
 
   useEffect(() => {
-    if (isConnected && doRedirectBack) doRedirectBack();
-  }, [isConnected, doRedirectBack]);
+    if (isConnected) {
+      if (doRedirectBack) {
+        doRedirectBack();
+      } else {
+        router.push('/conversations');
+      }
+    }
+  }, [isConnected, router]);
 
   return (
     <Page>

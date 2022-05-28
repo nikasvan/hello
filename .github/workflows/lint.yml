@@ -29,8 +29,10 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v2
         with:
-          # Enable your linters here
           github_token: ${{ secrets.github_token }}
+          continue_on_error: false
           eslint: true
           prettier: true
-          prettier_extensions: 'css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml,sol'
+          prettier_extensions:
+          'css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml,sol'
+          eslint_args: '--config .eslintrc.yml'

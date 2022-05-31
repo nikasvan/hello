@@ -1,17 +1,22 @@
 import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useXmtpConversation } from 'hooks';
+import { usePreviousVal, useXmtpConversation } from 'hooks';
 import { useEnsName } from 'wagmi';
 import Text from './Text';
 import { useRouter } from 'next/router';
 import Avatar from './Avatar';
 import MobileLoadingText from 'components/MobileLoadingText';
 import { Message } from '@xmtp/xmtp-js';
-
+import type { FetchEnsNameResult } from '@wagmi/core';
 interface ConversationProps {
   peerAddress: string;
   show: boolean;
-  onLoadedOrNewMessage: (peerAddress: string, messages: Message[]) => unknown;
+  onLoadedOrNewMessage: (
+    ensName: FetchEnsNameResult | undefined,
+    peerAddress: string,
+    messages: Message[],
+    prevMessagesCount: number
+  ) => unknown;
 }
 
 export default function Conversation(props: ConversationProps) {
@@ -21,6 +26,7 @@ export default function Conversation(props: ConversationProps) {
   const { data: ensName, isLoading } = useEnsName({
     address: props.peerAddress,
   });
+  const prevMessagesCount = usePreviousVal(messages.length);
   const lastMessage = messages[messages.length - 1];
   const router = useRouter();
 
@@ -30,7 +36,12 @@ export default function Conversation(props: ConversationProps) {
 
   useEffect(() => {
     if (!isConversationLoading) {
-      props.onLoadedOrNewMessage(props.peerAddress, messages);
+      props.onLoadedOrNewMessage(
+        ensName,
+        props.peerAddress,
+        messages,
+        prevMessagesCount ? prevMessagesCount : 0
+      );
     }
     // We don't actually care about messages changing, but there's probably a
     // better way.

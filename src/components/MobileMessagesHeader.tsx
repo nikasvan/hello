@@ -12,35 +12,22 @@ interface MobileMessageHeaderProps {
 export default function MobileMessagesHeader(props: MobileMessageHeaderProps) {
   return (
     <MobileFixedHeader>
-      <Header>
-        <Menu
-          width={30}
-          height={30}
-          src={'/assets/images/MobileWhiteHamburgerMenu.svg'}
-          onClick={props.onMenuClick}
-        />
-        <UserDisplay>{shortAddress(props.peerAddressOrName)}</UserDisplay>
-        <GoBack
-          width={20}
-          height={20}
-          src={ArrowLeftWhite}
-          onClick={props.onBackClick}
-        />
-      </Header>
+      <Menu
+        width={30}
+        height={30}
+        src={'/assets/images/MobileWhiteHamburgerMenu.svg'}
+        onClick={props.onMenuClick}
+      />
+      <UserDisplay>{shortAddress(props.peerAddressOrName)}</UserDisplay>
+      <GoBack
+        width={20}
+        height={20}
+        src={ArrowLeftWhite}
+        onClick={props.onBackClick}
+      />
     </MobileFixedHeader>
   );
 }
-
-const Header = styled.header`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 30px;
-  padding-right: 40px;
-  height: 68px;
-`;
 
 const UserDisplay = styled.h1`
   font-style: normal;

@@ -127,7 +127,7 @@ const List = styled.ul`
 
 const Page = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Centered = styled.div`

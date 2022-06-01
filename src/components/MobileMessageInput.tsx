@@ -5,10 +5,11 @@ import TrashCang from '../../public/assets/images/MobileTrashCan';
 import React, { useCallback } from 'react';
 
 interface MessageInputProps {
+  isMobile: boolean;
   onSendMessage: (val: string) => unknown;
 }
 
-const MessageInput = ({ onSendMessage }: MessageInputProps) => {
+const MessageInput = ({ isMobile, onSendMessage }: MessageInputProps) => {
   const [inputVal, setInputVal] = useState<string>('');
 
   const clearInput = useCallback(() => {
@@ -42,7 +43,7 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
         value={inputVal}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        autoFocus={true}
+        autoFocus={!isMobile}
       />
       <SvgContainer inputTextCount={inputTextCount} onClick={clearInput}>
         <TrashCang />

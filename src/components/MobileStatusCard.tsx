@@ -1,26 +1,38 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 import Loader from './LoadingSpinner';
+import Link from 'next/link';
 
 export interface MobileStatusCardProps {
   title: string;
   subtitle: string;
   buttonText: string;
   isLoading: boolean;
-  loadingText: string;
+  loadingText?: string;
   isError: boolean;
-  errorText: string;
-  onClick: () => unknown;
+  errorText?: string;
+  isInitializingCard?: boolean;
+  onClick?: () => void;
 }
-export default function MobileStatusCard(props: MobileStatusCardProps) {
+export default function MobileStatusCard({
+  title,
+  subtitle,
+  buttonText,
+  isLoading,
+  loadingText,
+  isError,
+  errorText,
+  isInitializingCard = false,
+  onClick,
+}: MobileStatusCardProps) {
   return (
     <Card>
-      {props.isLoading && (
+      {isLoading && (
         <Right>
           <Loader height={20} width={20} />
         </Right>
       )}
-      {props.isError && (
+      {isError && (
         <Right>
           <Image
             src="/assets/images/MobileErrorIndicator.svg"
@@ -30,15 +42,19 @@ export default function MobileStatusCard(props: MobileStatusCardProps) {
           />
         </Right>
       )}
-      <Title>{props.title}</Title>
-      <Subtitle>{props.subtitle}</Subtitle>
-      <Button onClick={props.onClick}>
-        {props.isLoading
-          ? props.loadingText
-          : props.isError
-          ? props.errorText
-          : props.buttonText}
-      </Button>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
+      {isInitializingCard ? (
+        <Button onClick={onClick}>
+          {isLoading ? loadingText : isError ? errorText : buttonText}
+        </Button>
+      ) : (
+        <Link href={'/conversations'} passHref>
+          <Button>
+            {isLoading ? loadingText : isError ? errorText : buttonText}
+          </Button>
+        </Link>
+      )}
     </Card>
   );
 }

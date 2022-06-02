@@ -49,17 +49,12 @@ export default function Messages() {
 
   const buckets = getMessageBuckets(messages.map((x) => x).reverse());
 
-  const goToConversations = useCallback(() => {
-    router.push('/conversations');
-  }, [router]);
-
   if (isLoading)
     return (
       <>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <MobileLoadingEnsName />;
       </>
@@ -69,9 +64,8 @@ export default function Messages() {
     return (
       <Page>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <Centered>
           <MobileStatusCard
@@ -82,7 +76,6 @@ export default function Messages() {
             isError={true}
             errorText={'Go Back to Conversations'}
             loadingText=""
-            onClick={goToConversations}
           />
         </Centered>
       </Page>
@@ -92,13 +85,13 @@ export default function Messages() {
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
       <MobileMessagesHeader
-        onBackClick={goToConversations}
         onMenuClick={openMenu}
-        peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+        titleText={peerEnsName || peerAddress || 'N/A'}
       />
       {xmtpStatus === XmtpStatus.ready || (
         <Centered>
           <MobileStatusCard
+            isInitializingCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -120,7 +113,6 @@ export default function Messages() {
             isError={true}
             errorText={'Go Back to Conversations'}
             loadingText=""
-            onClick={goToConversations}
           />
         </Centered>
       )}

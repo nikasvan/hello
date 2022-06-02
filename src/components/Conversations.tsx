@@ -74,6 +74,7 @@ export default function Conversations() {
       {xmtpStatus === XmtpStatus.ready || (
         <Centered>
           <MobileStatusCard
+            isInitializingCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"

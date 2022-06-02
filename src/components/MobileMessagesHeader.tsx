@@ -2,29 +2,29 @@ import styled from 'styled-components';
 import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface MobileMessageHeaderProps {
-  onBackClick: () => unknown;
+  titleText: string;
   onMenuClick: () => unknown;
-  peerAddressOrName: string;
 }
 
-export default function MobileMessagesHeader(props: MobileMessageHeaderProps) {
+export default function MobileMessagesHeader({
+  titleText,
+  onMenuClick,
+}: MobileMessageHeaderProps) {
   return (
     <MobileFixedHeader>
       <Menu
         width={30}
         height={30}
         src={'/assets/images/MobileWhiteHamburgerMenu.svg'}
-        onClick={props.onMenuClick}
+        onClick={onMenuClick}
       />
-      <UserDisplay>{shortAddress(props.peerAddressOrName)}</UserDisplay>
-      <GoBack
-        width={20}
-        height={20}
-        src={ArrowLeftWhite}
-        onClick={props.onBackClick}
-      />
+      <UserDisplay>{shortAddress(titleText)}</UserDisplay>
+      <Link href={'/conversations'} passHref>
+        <GoBack width={20} height={20} src={ArrowLeftWhite} />
+      </Link>
     </MobileFixedHeader>
   );
 }

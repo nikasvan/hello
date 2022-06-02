@@ -1,8 +1,19 @@
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-export default function MobileLoadingMessages() {
+export default function MobileLoadingMessages({
+  isMobile,
+}: {
+  isMobile: boolean;
+}) {
+  const divScrollToRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!divScrollToRef.current) return;
+    divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, []);
   return (
-    <MainContainer>
+    <MainContainer isMobile={isMobile}>
       <LeftContainer>
         <LeftUserInfo>
           <LogoOutline />
@@ -45,19 +56,22 @@ export default function MobileLoadingMessages() {
           <SecondMessage />
         </RightBottomMessageContainer>
       </RightContainer>
+      <div ref={divScrollToRef} />
     </MainContainer>
   );
 }
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ isMobile: boolean }>`
   color: white;
-  height: 100%;
+  height: ${({ isMobile }) =>
+    isMobile ? 'calc(100vh - 240px)' : 'calc(100vh - 164px);'};
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0px;
   padding: 20px;
   overflow: scroll;
+  z-index: 1000;
 
   @keyframes slide {
     0% {

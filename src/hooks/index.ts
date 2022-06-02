@@ -8,5 +8,6 @@ export * from './useIsMetaMask';
 
 import useActiveTab from './useActiveTab';
 import usePreviousVal from './usePreviousVal';
+import useDeviceDetect from './useDeviceDetect';
 
-export { useActiveTab, usePreviousVal };
+export { useActiveTab, usePreviousVal, useDeviceDetect };

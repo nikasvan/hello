@@ -4,6 +4,7 @@ import {
   useXmtp,
   useActiveTab,
   usePreviousVal,
+  useDeviceDetect,
 } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -20,6 +21,8 @@ import { useRouterEnsData } from 'hooks';
 import MobileLoadingEnsName from './MobileLoadingEnsName';
 
 export default function Messages() {
+  const { isMobile } = useDeviceDetect();
+
   const { init, status: xmtpStatus } = useXmtp();
   const router = useRouter();
   const {
@@ -158,48 +161,59 @@ export default function Messages() {
         </Centered>
       )}
       {status === ConversationStatus.loadingMessages && (
-        <MobileLoadingMessages />
+        <MobileLoadingMessages isMobile={isMobile} />
       )}
-      <List loadingMessages={status === ConversationStatus.loadingMessages}>
-        <div ref={divScrollToRef}></div>
-        {buckets.map((bucketMessages, index) => {
-          if (bucketMessages.length > 0) {
-            return (
-              <MobileMessagesBucket
-                key={index}
-                messages={bucketMessages}
-                peerAddress={peerAddress}
-                startDate={bucketMessages[0].sent}
-                sentByAddress={bucketMessages[0].senderAddress}
-              />
-            );
-          }
-          return null;
-        })}
-      </List>
-      <FixedFooter>
-        <MobileMessageInput onSendMessage={doSendMessage} />
-      </FixedFooter>
+      {status === ConversationStatus.ready && (
+        <List isMobile={isMobile}>
+          <div ref={divScrollToRef}></div>
+          {buckets.map((bucketMessages, index) => {
+            if (bucketMessages.length > 0) {
+              return (
+                <MobileMessagesBucket
+                  key={index}
+                  messages={bucketMessages}
+                  peerAddress={peerAddress}
+                  startDate={bucketMessages[0].sent}
+                  sentByAddress={bucketMessages[0].senderAddress}
+                />
+              );
+            }
+            return null;
+          })}
+        </List>
+      )}
+
+      {(status === ConversationStatus.loadingMessages ||
+        status === ConversationStatus.ready) && (
+        <FixedFooter>
+          <MobileMessageInput
+            onSendMessage={doSendMessage}
+            isMobile={isMobile}
+          />
+        </FixedFooter>
+      )}
     </Page>
   );
 }
 
 const Page = styled.div`
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   background: #100817;
   display: flex;
   flex-direction: column;
 `;
 
-const List = styled.ul<{ loadingMessages: boolean }>`
-  display: ${(props) => (props.loadingMessages ? 'none' : 'flex')};
+const List = styled.ul<{ isMobile: boolean }>`
+  display: flex;
   flex-direction: column-reverse;
   overflow: scroll;
   gap: 0.75rem;
   padding: 1rem;
   width: 100%;
-  height: calc(100vh - 164px);
+  height: ${({ isMobile }) =>
+    isMobile ? 'calc(100vh - 240px)' : 'calc(100vh - 164px);'};
+  z-index: 10;
 `;
 
 const FixedFooter = styled.div`
@@ -209,6 +223,7 @@ const FixedFooter = styled.div`
   left: 0;
   right: 0;
   border-top: 2px solid #191027;
+  background-color: ${({ theme }) => theme.colors.darkPurple};
 `;
 
 const Centered = styled.div`

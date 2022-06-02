@@ -98,6 +98,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 body {
   background: #100817;
   line-height: 1;
+  overflow-y: hidden;
 }
 ol,
 ul {

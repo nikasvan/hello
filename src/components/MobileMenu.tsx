@@ -226,8 +226,7 @@ const FullHeightSlider = styled.div<StyleProps>`
   width: 90vw;
   height: 100vh;
   background: #2e2043;
-  z-index: 1;
-  left: -90vw;
+  z-index: 100;
   left: ${({ showMenu }) => (showMenu ? '0vw' : '-90vw')};
   visibility: auto;
   visibility: ${({ showMenu }) => (showMenu ? 'auto' : 'hidden')};

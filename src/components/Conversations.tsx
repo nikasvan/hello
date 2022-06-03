@@ -1,11 +1,17 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ConversationsStatus, useXmtp, useXmtpConversations } from 'hooks';
+import {
+  ConversationsStatus,
+  useLocalStorage,
+  useXmtp,
+  useXmtpConversations,
+} from 'hooks';
 import Conversation from './Conversation';
 import MobileConversationsHeader from './MobileConversationsHeader';
 import MobileMenu from './MobileMenu';
 import CreateNewConversation from './CreateNewConversation';
 import MobileStatusCard from './MobileStatusCard';
+import Modal from './Modal';
 import {
   Message,
   Conversation as ConversationType,
@@ -16,6 +22,11 @@ import MobileLoadingPage from 'components/MobileLoadingPage';
 export default function Conversations() {
   const { init, status: xmtpStatus } = useXmtp();
   const { conversations, status } = useXmtpConversations();
+  const [hasInitilized, setHasInitialized] = useLocalStorage('hasInitilized');
+  const [hasHadMessages, sethasHadMessages] = useLocalStorage('hasHadMessages');
+  const [showInitializationModal, setShowInitializationModal] = useState(false);
+  const [showDeletedConversationModal, setShowDeletedConversationModal] =
+    useState(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showNewConversation, setShowNewConversation] =
     useState<boolean>(false);
@@ -24,6 +35,29 @@ export default function Conversations() {
     Record<string, Date | undefined>
   >({});
   const [numLoaded, setNumLoaded] = useState<number>(0);
+
+  const isReady =
+    xmtpStatus === XmtpStatus.ready && status === ConversationsStatus.ready;
+
+  const checkStorage = useCallback(() => {
+    if (!hasInitilized) {
+      setHasInitialized(true);
+      setShowInitializationModal(true);
+    } else if (!hasHadMessages && Object.keys(conversations).length > 0)
+      sethasHadMessages(true);
+    else if (hasHadMessages && Object.keys(conversations).length === 0)
+      setShowDeletedConversationModal(true);
+  }, [
+    hasHadMessages,
+    conversations,
+    hasInitilized,
+    setHasInitialized,
+    sethasHadMessages,
+  ]);
+
+  useEffect(() => {
+    if (isReady) checkStorage();
+  }, [checkStorage, isReady]);
 
   const allConversationsLoaded = useMemo(() => {
     return numLoaded > 0 && numLoaded === Object.entries(conversations).length;
@@ -116,6 +150,23 @@ export default function Conversations() {
           }
         )}
       </List>
+      {isReady && (
+        <Modal
+          active={showInitializationModal}
+          hideModal={() => setShowInitializationModal(false)}
+          title="Disclaimer!">
+          This is not in production. Your messages might get deleted!
+        </Modal>
+      )}
+
+      {isReady && (
+        <Modal
+          active={showDeletedConversationModal}
+          hideModal={() => setShowDeletedConversationModal(false)}
+          title="Disclaimer!">
+          Your messages may have been deleted by the XMTP team
+        </Modal>
+      )}
     </Page>
   );
 }

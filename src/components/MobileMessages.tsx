@@ -148,7 +148,8 @@ export default function Messages() {
       )}
 
       {(status === ConversationStatus.loadingMessages ||
-        status === ConversationStatus.ready) && (
+        status === ConversationStatus.ready ||
+        status === ConversationStatus.noMessages) && (
         <FixedFooter>
           <MobileMessageInput
             onSendMessage={doSendMessage}

@@ -3,6 +3,7 @@ import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface MobileMessageHeaderProps {
   titleText: string;
@@ -13,6 +14,7 @@ export default function MobileMessagesHeader({
   titleText,
   onMenuClick,
 }: MobileMessageHeaderProps) {
+  const router = useRouter();
   return (
     <MobileFixedHeader>
       <Menu
@@ -22,9 +24,12 @@ export default function MobileMessagesHeader({
         onClick={onMenuClick}
       />
       <UserDisplay>{shortAddress(titleText)}</UserDisplay>
-      <Link href={'/conversations'} passHref>
-        <GoBack width={20} height={20} src={ArrowLeftWhite} />
-      </Link>
+      <GoBack
+        width={20}
+        height={20}
+        src={ArrowLeftWhite}
+        onClick={() => router.back()}
+      />
     </MobileFixedHeader>
   );
 }

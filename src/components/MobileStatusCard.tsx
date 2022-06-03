@@ -11,7 +11,6 @@ export interface MobileStatusCardProps {
   loadingText?: string;
   isError: boolean;
   errorText?: string;
-  isInitializingCard?: boolean;
   onClick?: () => void;
 }
 export default function MobileStatusCard({
@@ -22,7 +21,6 @@ export default function MobileStatusCard({
   loadingText,
   isError,
   errorText,
-  isInitializingCard = false,
   onClick,
 }: MobileStatusCardProps) {
   return (
@@ -44,17 +42,9 @@ export default function MobileStatusCard({
       )}
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
-      {isInitializingCard ? (
-        <Button onClick={onClick}>
-          {isLoading ? loadingText : isError ? errorText : buttonText}
-        </Button>
-      ) : (
-        <Link href={'/conversations'} passHref>
-          <Button>
-            {isLoading ? loadingText : isError ? errorText : buttonText}
-          </Button>
-        </Link>
-      )}
+      <Button onClick={onClick}>
+        {isLoading ? loadingText : isError ? errorText : buttonText}
+      </Button>
     </Card>
   );
 }

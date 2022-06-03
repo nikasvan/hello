@@ -19,11 +19,11 @@ const ComingSoon = ({ text }: ComingSoonProps) => {
       <MobileMessagesHeader onMenuClick={openMenu} titleText={text} />
       <Centered>
         <MobileStatusCard
-          title="Feature is coming soon..."
+          title="Feature under development..."
+          subtitle="Check back soon!"
           isLoading={false}
           isError={false}
           errorText=""
-          subtitle=""
           buttonText="Go Back to Conversations"
         />
       </Centered>

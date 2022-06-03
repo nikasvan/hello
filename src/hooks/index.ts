@@ -6,7 +6,9 @@ export * from './useRouterEnsData';
 export * from './useWindowSize';
 export * from './useIsMetaMask';
 
+import useActiveTab from './useActiveTab';
+import usePreviousVal from './usePreviousVal';
 import useDeviceDetect from './useDeviceDetect';
 import useLocalStorage from './useLocalStorage';
 
-export { useDeviceDetect, useLocalStorage };
+export { useActiveTab, usePreviousVal, useDeviceDetect, useLocalStorage };

@@ -102,7 +102,7 @@ const HeadlineContainer = styled.div`
 `;
 const Headline = styled.h2`
   font-weight: 400;
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   font-size: 24px;
   color: #dad0e5;
   order: 1;
@@ -113,7 +113,7 @@ const Headline = styled.h2`
 `;
 
 const UserInput = styled.input`
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   font-weight: bold;
   border: none;
   font-size: 24px;
@@ -168,7 +168,7 @@ const ButtonText = styled.span`
   color: #dad0e5;
   margin-right: 21px;
   transition: color 400ms;
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   min-width: max-content;
 `;
 

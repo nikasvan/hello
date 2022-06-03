@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import {
   ConversationsStatus,
+  useActiveTab,
   useLocalStorage,
   useXmtp,
   useXmtpConversations,
@@ -12,16 +13,14 @@ import MobileMenu from './MobileMenu';
 import CreateNewConversation from './CreateNewConversation';
 import MobileStatusCard from './MobileStatusCard';
 import Modal from './Modal';
-import {
-  Message,
-  Conversation as ConversationType,
-} from '@xmtp/xmtp-js/dist/types/src';
+import { Conversation as ConversationType } from '@xmtp/xmtp-js/dist/types/src';
 import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileLoadingPage from 'components/MobileLoadingPage';
 
 export default function Conversations() {
   const { init, status: xmtpStatus } = useXmtp();
   const { conversations, status } = useXmtpConversations();
+  const { visibilityState: isTabVisible } = useActiveTab();
   const [hasInitilized, setHasInitialized] = useLocalStorage('hasInitilized');
   const [hasHadMessages, sethasHadMessages] = useLocalStorage('hasHadMessages');
   const [showInitializationModal, setShowInitializationModal] = useState(false);
@@ -63,10 +62,34 @@ export default function Conversations() {
     return numLoaded > 0 && numLoaded === Object.entries(conversations).length;
   }, [numLoaded, conversations]);
 
+  const sendNewMessageNotification = useCallback(
+    (messages, peerEnsName, peerAddress) => {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.recipientAddress !== peerAddress) {
+        new Notification(
+          `Received new Message from ${peerEnsName || peerAddress}`,
+          {
+            body: messages[messages.length - 1]?.content,
+          }
+        );
+      }
+    },
+    []
+  );
+
   const handleConversationStatusEvent = useCallback(
-    (peerAddress: string, messages: Message[]) => {
+    (ensName, peerAddress, messages, prevMessagesCount) => {
+      if (
+        messages.length > 0 && !isTabVisible && prevMessagesCount
+          ? prevMessagesCount < messages.length
+          : false
+      ) {
+        sendNewMessageNotification(messages, ensName, peerAddress);
+      }
+
       const lastMessage = messages[messages.length - 1];
       const timestamp = lastMessage ? lastMessage.sent : new Date();
+
       setTimestamped((prevState) => {
         return {
           ...prevState,
@@ -75,7 +98,7 @@ export default function Conversations() {
       });
       if (!allConversationsLoaded) setNumLoaded((prevState) => prevState + 1);
     },
-    [allConversationsLoaded]
+    [allConversationsLoaded, isTabVisible, sendNewMessageNotification]
   );
 
   const doOpenMenu = () => {

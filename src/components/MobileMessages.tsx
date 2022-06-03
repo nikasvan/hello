@@ -2,6 +2,8 @@ import {
   useXmtpConversation,
   ConversationStatus,
   useXmtp,
+  useActiveTab,
+  usePreviousVal,
   useDeviceDetect,
 } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -28,17 +30,51 @@ export default function Messages() {
     address: peerAddress,
     isLoading,
   } = useRouterEnsData();
-  const { messages, sendMessage, status } = useXmtpConversation(peerAddress);
+  const { messages, status, sendMessage } = useXmtpConversation(peerAddress);
+  const { visibilityState: isTabVisible } = useActiveTab();
+  const prevMessagesCount = usePreviousVal(messages.length);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const divScrollToRef = useRef<HTMLInputElement>(null);
 
   const openMenu = useCallback(() => setShowMenu(true), [setShowMenu]);
   const closeMenu = useCallback(() => setShowMenu(false), [setShowMenu]);
 
+  const scrollToBottom = useCallback(() => {
+    if (divScrollToRef.current) {
+      divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [divScrollToRef]);
+
   useEffect(() => {
-    if (!divScrollToRef.current) return;
-    divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (status === ConversationStatus.ready) {
+      scrollToBottom();
+    }
+  }, [status, scrollToBottom]);
+
+  const sendNewMessageNotification = useCallback(
+    (messages) => {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.recipientAddress !== peerAddress) {
+        new Notification(
+          `Received new Message from ${peerEnsName || peerAddress}`,
+          {
+            body: messages[messages.length - 1]?.content,
+          }
+        );
+      }
+    },
+    [peerAddress, peerEnsName]
+  );
+
+  useEffect(() => {
+    if (
+      messages.length > 0 && !isTabVisible && prevMessagesCount
+        ? prevMessagesCount < messages.length
+        : false
+    ) {
+      sendNewMessageNotification(messages);
+    }
+  }, [isTabVisible, messages, prevMessagesCount, sendNewMessageNotification]);
 
   const doSendMessage = useCallback(
     (message: string) => {

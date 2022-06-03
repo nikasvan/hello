@@ -9,5 +9,6 @@ export * from './useIsMetaMask';
 import useActiveTab from './useActiveTab';
 import usePreviousVal from './usePreviousVal';
 import useDeviceDetect from './useDeviceDetect';
+import useLocalStorage from './useLocalStorage';
 
-export { useActiveTab, usePreviousVal, useDeviceDetect };
+export { useActiveTab, usePreviousVal, useDeviceDetect, useLocalStorage };

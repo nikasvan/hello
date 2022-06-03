@@ -93,9 +93,8 @@ export default function Messages() {
     return (
       <>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <MobileLoadingEnsName />;
       </>
@@ -105,9 +104,8 @@ export default function Messages() {
     return (
       <Page>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <Centered>
           <MobileStatusCard
@@ -128,9 +126,8 @@ export default function Messages() {
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
       <MobileMessagesHeader
-        onBackClick={goToConversations}
         onMenuClick={openMenu}
-        peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+        titleText={peerEnsName || peerAddress || 'N/A'}
       />
       {xmtpStatus === XmtpStatus.ready || (
         <Centered>

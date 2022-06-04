@@ -11,7 +11,7 @@ export interface MobileStatusCardProps {
   loadingText?: string;
   isError: boolean;
   errorText?: string;
-  onClick?: () => void;
+  onClick: () => void;
 }
 export default function MobileStatusCard({
   title,

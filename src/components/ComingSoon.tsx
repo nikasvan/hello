@@ -2,16 +2,23 @@ import MobileMenu from 'components/MobileMenu';
 import MobileMessagesHeader from 'components/MobileMessagesHeader';
 import MobileStatusCard from 'components/MobileStatusCard';
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
+
 interface ComingSoonProps {
   text: string;
 }
 
 const ComingSoon = ({ text }: ComingSoonProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const router = useRouter();
 
   const openMenu = useCallback(() => setShowMenu(true), [setShowMenu]);
   const closeMenu = useCallback(() => setShowMenu(false), [setShowMenu]);
+  const goToConversations = useCallback(
+    () => router.push('/conversations'),
+    [router]
+  );
 
   return (
     <Page>
@@ -25,6 +32,7 @@ const ComingSoon = ({ text }: ComingSoonProps) => {
           isError={false}
           errorText=""
           buttonText="Go Back to Conversations"
+          onClick={goToConversations}
         />
       </Centered>
     </Page>

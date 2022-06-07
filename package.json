@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --check .",
-    "check": "next lint && next build && prettier --check ."
+    "check": "next lint && SKIP_SENTRY=true next build && prettier --check ."
   },
   "dependencies": {
     "@sentry/nextjs": "^7.0.0",

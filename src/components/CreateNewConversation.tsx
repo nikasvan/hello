@@ -50,7 +50,6 @@ export default function CreateNewConversation(
   return (
     <MainContainer onBlur={handleClickAway} show={show}>
       <HeadlineContainer>
-        <Headline>daopanel.chat/</Headline>
         <UserInput
           placeholder="Enter ENS name or address..."
           autoFocus
@@ -123,7 +122,8 @@ const UserInput = styled.input`
   width: 100%;
 
   ::placeholder {
-    color: transparent;
+    color: #dad0e5;
+    font-size: 1rem;
   }
 
   &:focus {
@@ -132,13 +132,6 @@ const UserInput = styled.input`
 
   &:focus + div {
     display: none;
-  }
-
-  @media (max-width: 950.5px) {
-    ::placeholder {
-      color: #dad0e5;
-      font-size: 20px;
-    }
   }
 `;
 

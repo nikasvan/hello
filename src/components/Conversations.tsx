@@ -12,7 +12,8 @@ import MobileConversationsHeader from './MobileConversationsHeader';
 import MobileMenu from './MobileMenu';
 import CreateNewConversation from './CreateNewConversation';
 import MobileStatusCard from './MobileStatusCard';
-import Modal from './Modal';
+import MobileDisclaimerCard from './MobileDisclaimerCard';
+
 import { Conversation as ConversationType } from '@xmtp/xmtp-js/dist/types/src';
 import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileLoadingPage from 'components/MobileLoadingPage';
@@ -21,11 +22,7 @@ export default function Conversations() {
   const { init, status: xmtpStatus } = useXmtp();
   const { conversations, status } = useXmtpConversations();
   const { visibilityState: isTabVisible } = useActiveTab();
-  const [hasInitilized, setHasInitialized] = useLocalStorage('hasInitilized');
-  const [hasHadMessages, sethasHadMessages] = useLocalStorage('hasHadMessages');
-  const [showInitializationModal, setShowInitializationModal] = useState(false);
-  const [showDeletedConversationModal, setShowDeletedConversationModal] =
-    useState(false);
+  const [hasInitialized, setHasInitialized] = useLocalStorage('hasInitialized');
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showNewConversation, setShowNewConversation] =
     useState<boolean>(false);
@@ -34,29 +31,6 @@ export default function Conversations() {
     Record<string, Date | undefined>
   >({});
   const [numLoaded, setNumLoaded] = useState<number>(0);
-
-  const isReady =
-    xmtpStatus === XmtpStatus.ready && status === ConversationsStatus.ready;
-
-  const checkStorage = useCallback(() => {
-    if (!hasInitilized) {
-      setHasInitialized(true);
-      setShowInitializationModal(true);
-    } else if (!hasHadMessages && Object.keys(conversations).length > 0)
-      sethasHadMessages(true);
-    else if (hasHadMessages && Object.keys(conversations).length === 0)
-      setShowDeletedConversationModal(true);
-  }, [
-    hasHadMessages,
-    conversations,
-    hasInitilized,
-    setHasInitialized,
-    sethasHadMessages,
-  ]);
-
-  useEffect(() => {
-    if (isReady) checkStorage();
-  }, [checkStorage, isReady]);
 
   const allConversationsLoaded = useMemo(() => {
     return numLoaded > 0 && numLoaded === Object.entries(conversations).length;
@@ -128,7 +102,7 @@ export default function Conversations() {
       {showNewConversation && (
         <CreateNewConversation close={doCloseCloseNewConversation} />
       )}
-      {xmtpStatus === XmtpStatus.ready || (
+      {xmtpStatus !== XmtpStatus.ready && hasInitialized && (
         <Centered>
           <MobileStatusCard
             title="Initialize XMTP Client..."
@@ -142,11 +116,21 @@ export default function Conversations() {
           />
         </Centered>
       )}
+      {xmtpStatus === XmtpStatus.idle && !hasInitialized && (
+        <Centered>
+          <MobileDisclaimerCard
+            title="Public Beta Release"
+            subtitle=""
+            errorText="I understand, Continue"
+            onClick={() => setHasInitialized(true)}
+          />
+        </Centered>
+      )}
       {status === ConversationsStatus.empty && (
         <Centered>
           <MobileStatusCard
             title="No conversations found."
-            subtitle="To begin messaging, first create a conversation."
+            subtitle="Send your first message to any ENS name or Eth address. Note: They will first have to sign their own XMTP message, so tell them to get on daopanel.chat! Or message us at trydaopanel.eth to try it out."
             buttonText="Create a Conversation"
             isLoading={false}
             isError={false}
@@ -154,6 +138,12 @@ export default function Conversations() {
             loadingText=""
             onClick={doNewConversation}
           />
+          <MissingConversations>
+            <div>Expected more conversations? </div>
+            <GoToXmtp href="https://docs.xmtp.org" target="_blank">
+              See disclaimer here.
+            </GoToXmtp>
+          </MissingConversations>
         </Centered>
       )}
       {xmtpStatus === XmtpStatus.ready &&
@@ -172,26 +162,26 @@ export default function Conversations() {
           }
         )}
       </List>
-      {isReady && (
-        <Modal
-          active={showInitializationModal}
-          hideModal={() => setShowInitializationModal(false)}
-          title="Disclaimer!">
-          This is not in production. Your messages might get deleted!
-        </Modal>
-      )}
-
-      {isReady && (
-        <Modal
-          active={showDeletedConversationModal}
-          hideModal={() => setShowDeletedConversationModal(false)}
-          title="Disclaimer!">
-          Your messages may have been deleted by the XMTP team
-        </Modal>
-      )}
     </Page>
   );
 }
+
+const MissingConversations = styled.div`
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  line-height: 1.5;
+`;
+
+const GoToXmtp = styled.a`
+  color: #f77272;
+  margin-left: 0.5rem;
+`;
 
 const List = styled.ul`
   display: flex;
@@ -208,7 +198,9 @@ const Centered = styled.div`
   margin: auto;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin-top: 100px;
   padding: 24px;
 `;

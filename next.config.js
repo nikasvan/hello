@@ -12,7 +12,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-
+  sentry: {
+    disableServerWebpackPlugin: Boolean(process.env.SKIP_SENTRY),
+    disableClientWebpackPlugin: Boolean(process.env.SKIP_SENTRY),
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Fixes npm packages that depend on `fs` module

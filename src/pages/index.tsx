@@ -103,7 +103,7 @@ export default function Landing() {
           <SignInLink
             hoverLogo={LightCoinbase.src}
             defaultLogo={coinbase.src}
-            name={'TEST SENTRY'}
+            name={'TEST SENTRY 1'}
             onClick={() => {
               throw new Error('Did Sentry see it?');
             }}

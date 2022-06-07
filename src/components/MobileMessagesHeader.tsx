@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 interface MobileMessageHeaderProps {

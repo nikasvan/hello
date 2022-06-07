@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useEnsAvatar } from 'wagmi';
-import Image from 'next/image';
 import styled from 'styled-components';
 import Blockies from 'react-blockies';
 import LoadingSpinner from './LoadingSpinner';
@@ -35,17 +34,12 @@ export default function Avatar(props: AvatarProps) {
       />
     );
   } else {
-    return (
-      <AvatarImage
-        src={ensAvatar}
-        width={props.size === 'large' ? 60 : 40}
-        height={props.size === 'large' ? 60 : 40}
-        alt="user"
-      />
-    );
+    return <AvatarImage src={ensAvatar} size={props.size} alt="user" />;
   }
 }
 
-const AvatarImage = styled(Image)`
+const AvatarImage = styled.img<{ size?: 'large' | 'small' | 'medium' }>`
   border-radius: 50%;
+  width: ${(p) => (p.size === 'large' ? '60px' : '40px')};
+  height: ${(p) => (p.size === 'large' ? '60px' : '40px')};
 `;

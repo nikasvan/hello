@@ -1,8 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
-import Config from 'config';
 
 Sentry.init({
-  dsn: Config.Sentry.dsn,
-  environment: Config.Sentry.environment,
-  tracesSampleRate: Config.Sentry.tracesSampleRate,
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.VERCEL_GIT_COMMIT_REF,
+  tracesSampleRate: 1.0,
 });

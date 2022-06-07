@@ -59,7 +59,7 @@ const wagmi = createClient({
 export default function App({ Component, pageProps }: AppProps) {
   console.log('dsn', Config.Sentry.dsn);
   console.log('env', Config.Sentry.environment);
-  console.log('env vars', process.env.VERCEL_GIT_COMMIT_REF);
+  console.log('env vars', process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF);
   // checking for notifications at the Top Level
   useEffect(() => {
     const CheckForNotification = async () => {

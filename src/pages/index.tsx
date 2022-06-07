@@ -14,7 +14,7 @@ import MobileBetaStatus from 'components/MobileBetaStatus';
 import { useRedirect } from 'hooks';
 import { useRouter } from 'next/router';
 
-const highlight = '#9867ce';
+const highlight = '#7349e5';
 
 export default function Landing() {
   const router = useRouter();
@@ -125,7 +125,7 @@ const Headline = styled.h1`
   font-size: 100.755px;
   line-height: 161px;
   text-align: center;
-  color: #9867ce;
+  color: #7349e5;
   display: flex;
   align-items: center;
 

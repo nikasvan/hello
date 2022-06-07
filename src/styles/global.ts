@@ -23,7 +23,7 @@ export const theme: DefaultTheme = {
     deepPurple: '#271D47',
     darkPurpleHover: '#231A3A',
     darkPurpleBorder: '#191027',
-    purple: '#9867CE',
+    purple: '#7349e5',
     purpleDisabled: '#7040A5',
     lightPurple: '#DAD0E6',
     white: '#FFFFFF',

@@ -76,7 +76,7 @@ const MainContainer = styled.div<{ show: boolean }>`
   display: flex;
   justify-content: space-between;
   color: white;
-  background: #9867ce;
+  background: #7349e5;
   padding: 53px 42px;
   position: fixed;
   top: 0px;

@@ -1,15 +1,43 @@
-import React, { useState, useCallback, ReactElement, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  ReactElement,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import { Client } from '@xmtp/xmtp-js';
 import Xmtp, { XmtpStatus } from 'contexts/XmtpContext';
-import { useSigner } from 'wagmi';
+import { useSigner, useAccount } from 'wagmi';
+import { useRouter } from 'next/router';
+
+function usePreviousString(value: string | undefined) {
+  const ref = useRef<string | undefined>();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  return ref.current;
+}
 
 const XmtpProvider = (props: { children: ReactElement }) => {
   const { data: wallet } = useSigner();
+  const { data: accountData } = useAccount();
+  const router = useRouter();
 
   const [client, setClient] = useState<Client | null>(null);
+  const prevClientAddress = usePreviousString(client?.address);
   const [signatureDenied, setSignatureDenied] = useState<boolean | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    if (
+      client !== null &&
+      prevClientAddress !== undefined &&
+      prevClientAddress !== accountData?.address
+    )
+      router.reload();
+  }, [client, router, prevClientAddress, accountData]);
 
   const init = useCallback(async () => {
     if (wallet) {

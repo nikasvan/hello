@@ -14,6 +14,7 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { useEffect } from 'react';
+import Config from 'config';
 
 const alchemyKey = 'kmMb00nhQ0SWModX6lJLjXy_pVtiQnjx';
 
@@ -56,6 +57,8 @@ const wagmi = createClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  console.log('dsn', Config.Sentry.dsn);
+  console.log('env', Config.Sentry.environment);
   // checking for notifications at the Top Level
   useEffect(() => {
     const CheckForNotification = async () => {

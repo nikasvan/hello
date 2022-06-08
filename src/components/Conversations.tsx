@@ -1,21 +1,28 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ConversationsStatus, useXmtp, useXmtpConversations } from 'hooks';
+import {
+  ConversationsStatus,
+  useActiveTab,
+  useLocalStorage,
+  useXmtp,
+  useXmtpConversations,
+} from 'hooks';
 import Conversation from './Conversation';
 import MobileConversationsHeader from './MobileConversationsHeader';
 import MobileMenu from './MobileMenu';
 import CreateNewConversation from './CreateNewConversation';
 import MobileStatusCard from './MobileStatusCard';
-import {
-  Message,
-  Conversation as ConversationType,
-} from '@xmtp/xmtp-js/dist/types/src';
+import MobileDisclaimerCard from './MobileDisclaimerCard';
+
+import { Conversation as ConversationType } from '@xmtp/xmtp-js/dist/types/src';
 import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileLoadingPage from 'components/MobileLoadingPage';
 
 export default function Conversations() {
   const { init, status: xmtpStatus } = useXmtp();
   const { conversations, status } = useXmtpConversations();
+  const { visibilityState: isTabVisible } = useActiveTab();
+  const [hasInitialized, setHasInitialized] = useLocalStorage('hasInitialized');
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showNewConversation, setShowNewConversation] =
     useState<boolean>(false);
@@ -29,10 +36,34 @@ export default function Conversations() {
     return numLoaded > 0 && numLoaded === Object.entries(conversations).length;
   }, [numLoaded, conversations]);
 
+  const sendNewMessageNotification = useCallback(
+    (messages, peerEnsName, peerAddress) => {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.recipientAddress !== peerAddress) {
+        new Notification(
+          `Received new Message from ${peerEnsName || peerAddress}`,
+          {
+            body: messages[messages.length - 1]?.content,
+          }
+        );
+      }
+    },
+    []
+  );
+
   const handleConversationStatusEvent = useCallback(
-    (peerAddress: string, messages: Message[]) => {
+    (ensName, peerAddress, messages, prevMessagesCount) => {
+      if (
+        messages.length > 0 && !isTabVisible && prevMessagesCount
+          ? prevMessagesCount < messages.length
+          : false
+      ) {
+        sendNewMessageNotification(messages, ensName, peerAddress);
+      }
+
       const lastMessage = messages[messages.length - 1];
       const timestamp = lastMessage ? lastMessage.sent : new Date();
+
       setTimestamped((prevState) => {
         return {
           ...prevState,
@@ -41,7 +72,7 @@ export default function Conversations() {
       });
       if (!allConversationsLoaded) setNumLoaded((prevState) => prevState + 1);
     },
-    [allConversationsLoaded]
+    [allConversationsLoaded, isTabVisible, sendNewMessageNotification]
   );
 
   const doOpenMenu = () => {
@@ -71,7 +102,7 @@ export default function Conversations() {
       {showNewConversation && (
         <CreateNewConversation close={doCloseCloseNewConversation} />
       )}
-      {xmtpStatus === XmtpStatus.ready || (
+      {xmtpStatus !== XmtpStatus.ready && hasInitialized && (
         <Centered>
           <MobileStatusCard
             title="Initialize XMTP Client..."
@@ -85,11 +116,21 @@ export default function Conversations() {
           />
         </Centered>
       )}
+      {xmtpStatus === XmtpStatus.idle && !hasInitialized && (
+        <Centered>
+          <MobileDisclaimerCard
+            title="Public Beta Release"
+            subtitle=""
+            errorText="I understand, Continue"
+            onClick={() => setHasInitialized(true)}
+          />
+        </Centered>
+      )}
       {status === ConversationsStatus.empty && (
         <Centered>
           <MobileStatusCard
             title="No conversations found."
-            subtitle="To begin messaging, first create a conversation."
+            subtitle="Send your first message to any ENS name or Eth address. Note: They will first have to sign their own XMTP message, so tell them to get on daopanel.chat! Or message us at trydaopanel.eth to try it out."
             buttonText="Create a Conversation"
             isLoading={false}
             isError={false}
@@ -97,12 +138,16 @@ export default function Conversations() {
             loadingText=""
             onClick={doNewConversation}
           />
+          <MissingConversations>
+            <div>Expected more conversations? </div>
+            <GoToXmtp href="https://docs.xmtp.org" target="_blank">
+              See disclaimer here.
+            </GoToXmtp>
+          </MissingConversations>
         </Centered>
       )}
       {xmtpStatus === XmtpStatus.ready &&
-        status === ConversationsStatus.loading && (
-          <MobileLoadingPage />
-        )}
+        status === ConversationsStatus.loading && <MobileLoadingPage />}
       <List>
         {sortedByTimestamp(conversations, timestamped).map(
           (peerAddress: string) => {
@@ -121,6 +166,23 @@ export default function Conversations() {
   );
 }
 
+const MissingConversations = styled.div`
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  line-height: 1.5;
+`;
+
+const GoToXmtp = styled.a`
+  color: #f77272;
+  margin-left: 0.5rem;
+`;
+
 const List = styled.ul`
   display: flex;
   flex-direction: column;
@@ -129,14 +191,16 @@ const List = styled.ul`
 
 const Page = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Centered = styled.div`
   margin: auto;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin-top: 100px;
   padding: 24px;
 `;

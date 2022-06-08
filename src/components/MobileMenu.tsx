@@ -5,17 +5,17 @@ import MobileBetaStatus from './MobileBetaStatus';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useRouter } from 'next/router';
 import { useCallback, useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 interface MobileMenuProps {
   onClickClose: () => unknown;
-  onClickAllMessages?: () => unknown;
-  onClickRequests?: () => unknown;
-  onClickFollowers?: () => unknown;
-  onClickIgnored?: () => unknown;
   showMenu: boolean;
 }
 
-export default function MobileMenu(props: MobileMenuProps) {
+export default function MobileMenu({
+  onClickClose,
+  showMenu,
+}: MobileMenuProps) {
   const { data: accountData } = useAccount();
   const { disconnect } = useDisconnect();
   const router = useRouter();
@@ -25,11 +25,13 @@ export default function MobileMenu(props: MobileMenuProps) {
   const minSwipeDistance = 50;
 
   //Closes Slider window when clicked off of
+  /* eslint-disable-next-line */
   function useOutsideAlerter(ref: any) {
     useEffect(() => {
+      /* eslint-disable-next-line */
       function handleClickOutside(event: any) {
         if (ref.current && !ref.current.contains(event.target)) {
-          props.onClickClose();
+          onClickClose();
         }
       }
       document.addEventListener('mousedown', handleClickOutside);
@@ -40,11 +42,13 @@ export default function MobileMenu(props: MobileMenuProps) {
   }
   useOutsideAlerter(slider);
 
+  /* eslint-disable-next-line */
   const onTouchStart = (e: any) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
+  /* eslint-disable-next-line */
   const onTouchMove = (e: any) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
@@ -55,7 +59,7 @@ export default function MobileMenu(props: MobileMenuProps) {
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     if (isLeftSwipe || isRightSwipe) {
-      isLeftSwipe && props.onClickClose();
+      isLeftSwipe && onClickClose();
     }
   };
 
@@ -69,7 +73,7 @@ export default function MobileMenu(props: MobileMenuProps) {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onTouchMove={onTouchMove}
-      showMenu={props.showMenu}
+      showMenu={showMenu}
       ref={slider}>
       <MobileBetaStatus />
       <Header>
@@ -79,7 +83,7 @@ export default function MobileMenu(props: MobileMenuProps) {
           height={20}
           width={20}
           alt="close"
-          onClick={props.onClickClose}
+          onClick={onClickClose}
         />
       </Header>
       <ConnectedWrapper>
@@ -90,54 +94,62 @@ export default function MobileMenu(props: MobileMenuProps) {
         />
       </ConnectedWrapper>
       <MenuItems>
-        <MenuItem>
-          <Image
-            src={'/assets/images/chat-mob.svg'}
-            width={40}
-            height={40}
-            alt="github"
-          />
-          <MenuItemDescription>
-            <PrimaryText>All Messsages</PrimaryText>
-            <SecondaryText>View all messages...</SecondaryText>
-          </MenuItemDescription>
-        </MenuItem>
-        <MenuItem>
-          <Image
-            src={'/assets/images/bell-mob.svg'}
-            width={40}
-            height={40}
-            alt="github"
-          />
-          <MenuItemDescription>
-            <PrimaryText>Requests</PrimaryText>
-            <SecondaryText>View conversation requests</SecondaryText>
-          </MenuItemDescription>
-        </MenuItem>
-        <MenuItem>
-          <Image
-            src={'/assets/images/added-people-mob.svg'}
-            width={40}
-            height={40}
-            alt="github"
-          />
-          <MenuItemDescription>
-            <PrimaryText>Followers</PrimaryText>
-            <SecondaryText>View messages from followers.</SecondaryText>
-          </MenuItemDescription>
-        </MenuItem>
-        <MenuItem>
-          <Image
-            src={'/assets/images/no-eye-mob.svg'}
-            width={40}
-            height={40}
-            alt="github"
-          />
-          <MenuItemDescription>
-            <PrimaryText>Ignored</PrimaryText>
-            <SecondaryText>View ignored messages</SecondaryText>
-          </MenuItemDescription>
-        </MenuItem>
+        <Link href={'/all-messages'} passHref>
+          <MenuItem>
+            <Image
+              src={'/assets/images/chat-mob.svg'}
+              width={40}
+              height={40}
+              alt="github"
+            />
+            <MenuItemDescription>
+              <PrimaryText>All Messsages</PrimaryText>
+              <SecondaryText>View all messages...</SecondaryText>
+            </MenuItemDescription>
+          </MenuItem>
+        </Link>
+        <Link href={'/requests'} passHref>
+          <MenuItem>
+            <Image
+              src={'/assets/images/bell-mob.svg'}
+              width={40}
+              height={40}
+              alt="github"
+            />
+            <MenuItemDescription>
+              <PrimaryText>Requests</PrimaryText>
+              <SecondaryText>View conversation requests</SecondaryText>
+            </MenuItemDescription>
+          </MenuItem>
+        </Link>
+        <Link href={'/followers'} passHref>
+          <MenuItem>
+            <Image
+              src={'/assets/images/added-people-mob.svg'}
+              width={40}
+              height={40}
+              alt="github"
+            />
+            <MenuItemDescription>
+              <PrimaryText>Followers</PrimaryText>
+              <SecondaryText>View messages from followers.</SecondaryText>
+            </MenuItemDescription>
+          </MenuItem>
+        </Link>
+        <Link href={'/ignored'} passHref>
+          <MenuItem>
+            <Image
+              src={'/assets/images/no-eye-mob.svg'}
+              width={40}
+              height={40}
+              alt="github"
+            />
+            <MenuItemDescription>
+              <PrimaryText>Ignored</PrimaryText>
+              <SecondaryText>View ignored messages</SecondaryText>
+            </MenuItemDescription>
+          </MenuItem>
+        </Link>
       </MenuItems>
     </FullHeightSlider>
   );
@@ -152,7 +164,8 @@ const MenuItems = styled.nav`
   padding-left: 40px;
 `;
 
-const MenuItem = styled.div`
+const MenuItem = styled.a`
+  text-decoration: none;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -222,8 +235,7 @@ const FullHeightSlider = styled.div<StyleProps>`
   width: 90vw;
   height: 100vh;
   background: #2e2043;
-  z-index: 1;
-  left: -90vw;
+  z-index: 100;
   left: ${({ showMenu }) => (showMenu ? '0vw' : '-90vw')};
   visibility: auto;
   visibility: ${({ showMenu }) => (showMenu ? 'auto' : 'hidden')};

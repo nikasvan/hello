@@ -18,7 +18,7 @@ import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useWindowSize } from 'hooks';
 
-const highlight = '#9867ce';
+const highlight = '#7349e5';
 
 export default function MobileConnect() {
   const { isConnected } = useConnect();
@@ -103,7 +103,7 @@ const Headline = styled.h1`
   font-size: 100.755px;
   line-height: 161px;
   text-align: center;
-  color: #9867ce;
+  color: #7349e5;
 `;
 
 const Page = styled.div`

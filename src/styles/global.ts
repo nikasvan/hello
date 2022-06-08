@@ -17,13 +17,13 @@ export const device = {
 // we'll need to merge them at some point
 // https://styled-components.com/docs/api#create-a-declarations-file
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const theme: DefaultTheme | any = {
+export const theme: DefaultTheme = {
   colors: {
     darkPurple: '#100817',
     deepPurple: '#271D47',
     darkPurpleHover: '#231A3A',
     darkPurpleBorder: '#191027',
-    purple: '#9867CE',
+    purple: '#7349e5',
     purpleDisabled: '#7040A5',
     lightPurple: '#DAD0E6',
     white: '#FFFFFF',
@@ -98,6 +98,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 body {
   background: #100817;
   line-height: 1;
+  overflow-y: hidden;
 }
 ol,
 ul {

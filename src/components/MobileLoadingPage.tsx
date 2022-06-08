@@ -14,9 +14,15 @@ export default function MobileLoadingConversations() {
         <Dot></Dot>
         <Dot></Dot>
       </DotContainer>
+      <RefreshIfSlow>Taking too long? Try refreshing the page.</RefreshIfSlow>
     </MainContainer>
   );
 }
+
+const RefreshIfSlow = styled.h3`
+  color: #dad0e6;
+  margin-top: 3rem;
+`;
 
 const Background = styled.div`
   width: 100vw;
@@ -59,7 +65,7 @@ const MainContainer = styled.div`
 `;
 
 const Header = styled.h1`
-  color: #9867ce;
+  color: #7349e5;
   font-size: 2rem;
   text-align: center;
   margin-top: -20vh;

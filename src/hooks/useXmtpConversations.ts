@@ -32,7 +32,7 @@ export function useXmtpConversations() {
   useEffect(() => {
     const synchronizeConvos = async () => {
       if (!xmtp) return;
-      const conversationsStream = xmtp.conversations.stream();
+      const conversationsStream = await xmtp.conversations.stream();
       // Save the stream so we can stop it when the component unmounts.
       setStream(conversationsStream);
       for await (const conversation of conversationsStream) {

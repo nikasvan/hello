@@ -15,37 +15,24 @@ export default function MobileConversationsHeader(
 ) {
   return (
     <MobileFixedHeader>
-      <FullWidthFlexRow>
-        <ClickableImage
-          src={MobileMenu}
-          alt="menu"
-          width={30}
-          height={30}
-          onClick={props.onClickMenu}
-        />
-        <ActiveCategory>{props.activeCategory}</ActiveCategory>
-        <ClickableImage
-          src={NewConversation}
-          alt="menu"
-          width={20}
-          height={20}
-          onClick={props.onClickNewConversation}
-        />
-      </FullWidthFlexRow>
+      <ClickableImage
+        src={MobileMenu}
+        alt="menu"
+        width={30}
+        height={30}
+        onClick={props.onClickMenu}
+      />
+      <ActiveCategory>{props.activeCategory}</ActiveCategory>
+      <ClickableImage
+        src={NewConversation}
+        alt="menu"
+        width={20}
+        height={20}
+        onClick={props.onClickNewConversation}
+      />
     </MobileFixedHeader>
   );
 }
-
-const FullWidthFlexRow = styled.header`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 30px;
-  padding-right: 40px;
-`;
 
 const ActiveCategory = styled.h1`
   color: white;

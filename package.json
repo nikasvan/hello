@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prettier": "prettier --write .",
-    "check": "next lint && next build && prettier --check ."
+    "prettier": "prettier --check .",
+    "check": "next lint && SKIP_SENTRY=true next build && prettier --check ."
   },
   "dependencies": {
+    "@sentry/nextjs": "^7.0.0",
     "@types/react-blockies": "^1.4.1",
-    "@xmtp/xmtp-js": "^3.0.1",
+    "@xmtp/xmtp-js": "^4.0.0",
     "copy-to-clipboard": "^3.3.1",
     "ethers": "^5.6.4",
     "i18next": "^21.6.16",
@@ -24,6 +25,7 @@
     "npm": "^8.7.0",
     "react": "17.0.2",
     "react-blockies": "^1.4.1",
+    "react-device-detect": "2.2.2",
     "react-dom": "17.0.2",
     "react-i18next": "^11.16.7",
     "styled-components": "^5.3.5",

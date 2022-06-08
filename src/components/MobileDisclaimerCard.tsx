@@ -1,53 +1,46 @@
 import styled from 'styled-components';
 import Image from 'next/image';
-import Loader from './LoadingSpinner';
-import Link from 'next/link';
 
-export interface MobileStatusCardProps {
+export interface MobileDisclaimerCardProps {
   title: string;
   subtitle: string;
-  buttonText: string;
-  isLoading: boolean;
-  loadingText?: string;
-  isError: boolean;
   errorText?: string;
   onClick: () => void;
 }
-export default function MobileStatusCard({
+export default function MobileDisclaimerCard({
   title,
   subtitle,
-  buttonText,
-  isLoading,
-  loadingText,
-  isError,
   errorText,
   onClick,
-}: MobileStatusCardProps) {
+}: MobileDisclaimerCardProps) {
   return (
     <Card>
-      {isLoading && (
-        <Right>
-          <Loader height={20} width={20} />
-        </Right>
-      )}
-      {isError && (
-        <Right>
-          <Image
-            src="/assets/images/MobileErrorIndicator.svg"
-            height={20}
-            width={20}
-            alt="error"
-          />
-        </Right>
-      )}
+      <Right>
+        <Image
+          src="/assets/images/MobileErrorIndicator.svg"
+          height={20}
+          width={20}
+          alt="error"
+        />
+      </Right>
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={onClick}>
-        {isLoading ? loadingText : isError ? errorText : buttonText}
-      </Button>
+      <GoToXmtp href="https://docs.xmtp.org" target="_blank">
+        See disclaimer here.
+      </GoToXmtp>
+      <Button onClick={onClick}>{errorText}</Button>
     </Card>
   );
 }
+
+const GoToXmtp = styled.a`
+  width: 100%;
+  text-align: center;
+  color: #f77272;
+  display: block;
+  margin-top: 1rem;
+  text-decoration: none;
+`;
 
 const Right = styled.div`
   float: right;
@@ -55,6 +48,7 @@ const Right = styled.div`
 
 const Card = styled.div`
   max-width: 456px;
+  min-width: 275px;
   border-radius: 8px;
   background-color: #100817;
   border: 2px solid #402b5b;

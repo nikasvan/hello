@@ -39,7 +39,7 @@ export default function CreateNewConversation(
   }, [props.close]);
 
   const handleClickAway = useCallback(
-    (event: any) => {
+    (event) => {
       if (!event.currentTarget.contains(event.relatedTarget)) {
         handleClose();
       }
@@ -50,7 +50,6 @@ export default function CreateNewConversation(
   return (
     <MainContainer onBlur={handleClickAway} show={show}>
       <HeadlineContainer>
-        <Headline>daopanel.chat/</Headline>
         <UserInput
           placeholder="Enter ENS name or address..."
           autoFocus
@@ -77,7 +76,7 @@ const MainContainer = styled.div<{ show: boolean }>`
   display: flex;
   justify-content: space-between;
   color: white;
-  background: #9867ce;
+  background: #7349e5;
   padding: 53px 42px;
   position: fixed;
   top: 0px;
@@ -102,7 +101,7 @@ const HeadlineContainer = styled.div`
 `;
 const Headline = styled.h2`
   font-weight: 400;
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   font-size: 24px;
   color: #dad0e5;
   order: 1;
@@ -113,7 +112,7 @@ const Headline = styled.h2`
 `;
 
 const UserInput = styled.input`
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   font-weight: bold;
   border: none;
   font-size: 24px;
@@ -123,7 +122,8 @@ const UserInput = styled.input`
   width: 100%;
 
   ::placeholder {
-    color: transparent;
+    color: #dad0e5;
+    font-size: 1rem;
   }
 
   &:focus {
@@ -132,13 +132,6 @@ const UserInput = styled.input`
 
   &:focus + div {
     display: none;
-  }
-
-  @media (max-width: 950.5px) {
-    ::placeholder {
-      color: #dad0e5;
-      font-size: 20px;
-    }
   }
 `;
 
@@ -168,7 +161,7 @@ const ButtonText = styled.span`
   color: #dad0e5;
   margin-right: 21px;
   transition: color 400ms;
-  font-family: Montserrat;
+  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
   min-width: max-content;
 `;
 

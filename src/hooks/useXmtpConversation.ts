@@ -65,7 +65,7 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
   useEffect(() => {
     const streamMessages = async () => {
       if (!conversation) return;
-      const messageStream = conversation.streamMessages();
+      const messageStream = await conversation.streamMessages();
       // Save the stream in state so we can stop the stream when the component unmounts.
       setStream(messageStream);
       for await (const msg of messageStream) {

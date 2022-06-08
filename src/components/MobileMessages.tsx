@@ -1,4 +1,11 @@
-import { useXmtpConversation, ConversationStatus, useXmtp } from 'hooks';
+import {
+  useXmtpConversation,
+  ConversationStatus,
+  useXmtp,
+  useActiveTab,
+  usePreviousVal,
+  useDeviceDetect,
+} from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import MobileMessagesHeader from './MobileMessagesHeader';
@@ -14,6 +21,8 @@ import { useRouterEnsData } from 'hooks';
 import MobileLoadingEnsName from './MobileLoadingEnsName';
 
 export default function Messages() {
+  const { isMobile } = useDeviceDetect();
+
   const { init, status: xmtpStatus } = useXmtp();
   const router = useRouter();
   const {
@@ -21,17 +30,51 @@ export default function Messages() {
     address: peerAddress,
     isLoading,
   } = useRouterEnsData();
-  const { messages, sendMessage, status } = useXmtpConversation(peerAddress);
+  const { messages, status, sendMessage } = useXmtpConversation(peerAddress);
+  const { visibilityState: isTabVisible } = useActiveTab();
+  const prevMessagesCount = usePreviousVal(messages.length);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const divScrollToRef = useRef<HTMLInputElement>(null);
 
   const openMenu = useCallback(() => setShowMenu(true), [setShowMenu]);
   const closeMenu = useCallback(() => setShowMenu(false), [setShowMenu]);
 
+  const scrollToBottom = useCallback(() => {
+    if (divScrollToRef.current) {
+      divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [divScrollToRef]);
+
   useEffect(() => {
-    if (!divScrollToRef.current) return;
-    divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (status === ConversationStatus.ready) {
+      scrollToBottom();
+    }
+  }, [status, scrollToBottom]);
+
+  const sendNewMessageNotification = useCallback(
+    (messages) => {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.recipientAddress !== peerAddress) {
+        new Notification(
+          `Received new Message from ${peerEnsName || peerAddress}`,
+          {
+            body: messages[messages.length - 1]?.content,
+          }
+        );
+      }
+    },
+    [peerAddress, peerEnsName]
+  );
+
+  useEffect(() => {
+    if (
+      messages.length > 0 && !isTabVisible && prevMessagesCount
+        ? prevMessagesCount < messages.length
+        : false
+    ) {
+      sendNewMessageNotification(messages);
+    }
+  }, [isTabVisible, messages, prevMessagesCount, sendNewMessageNotification]);
 
   const doSendMessage = useCallback(
     (message: string) => {
@@ -50,9 +93,8 @@ export default function Messages() {
     return (
       <>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <MobileLoadingEnsName />;
       </>
@@ -62,9 +104,8 @@ export default function Messages() {
     return (
       <Page>
         <MobileMessagesHeader
-          onBackClick={goToConversations}
           onMenuClick={openMenu}
-          peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+          titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <Centered>
           <MobileStatusCard
@@ -85,9 +126,8 @@ export default function Messages() {
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
       <MobileMessagesHeader
-        onBackClick={goToConversations}
         onMenuClick={openMenu}
-        peerAddressOrName={peerEnsName || peerAddress || 'N/A'}
+        titleText={peerEnsName || peerAddress || 'N/A'}
       />
       {xmtpStatus === XmtpStatus.ready || (
         <Centered>
@@ -118,48 +158,60 @@ export default function Messages() {
         </Centered>
       )}
       {status === ConversationStatus.loadingMessages && (
-        <MobileLoadingMessages />
+        <MobileLoadingMessages isMobile={isMobile} />
       )}
-      <List loadingMessages={status === ConversationStatus.loadingMessages}>
-        <div ref={divScrollToRef}></div>
-        {buckets.map((bucketMessages, index) => {
-          if (bucketMessages.length > 0) {
-            return (
-              <MobileMessagesBucket
-                key={index}
-                messages={bucketMessages}
-                peerAddress={peerAddress}
-                startDate={bucketMessages[0].sent}
-                sentByAddress={bucketMessages[0].senderAddress}
-              />
-            );
-          }
-          return null;
-        })}
-      </List>
-      <FixedFooter>
-        <MobileMessageInput onSendMessage={doSendMessage} />
-      </FixedFooter>
+      {status === ConversationStatus.ready && (
+        <List isMobile={isMobile}>
+          <div ref={divScrollToRef}></div>
+          {buckets.map((bucketMessages, index) => {
+            if (bucketMessages.length > 0) {
+              return (
+                <MobileMessagesBucket
+                  key={index}
+                  messages={bucketMessages}
+                  peerAddress={peerAddress}
+                  startDate={bucketMessages[0].sent}
+                  sentByAddress={bucketMessages[0].senderAddress}
+                />
+              );
+            }
+            return null;
+          })}
+        </List>
+      )}
+
+      {(status === ConversationStatus.loadingMessages ||
+        status === ConversationStatus.ready ||
+        status === ConversationStatus.noMessages) && (
+        <FixedFooter>
+          <MobileMessageInput
+            onSendMessage={doSendMessage}
+            isMobile={isMobile}
+          />
+        </FixedFooter>
+      )}
     </Page>
   );
 }
 
 const Page = styled.div`
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   background: #100817;
   display: flex;
   flex-direction: column;
 `;
 
-const List = styled.ul<{ loadingMessages: boolean }>`
-  display: ${(props) => (props.loadingMessages ? 'none' : 'flex')};
+const List = styled.ul<{ isMobile: boolean }>`
+  display: flex;
   flex-direction: column-reverse;
   overflow: scroll;
   gap: 0.75rem;
   padding: 1rem;
   width: 100%;
-  height: calc(100vh - 164px);
+  height: ${({ isMobile }) =>
+    isMobile ? 'calc(100vh - 240px)' : 'calc(100vh - 164px);'};
+  z-index: 10;
 `;
 
 const FixedFooter = styled.div`
@@ -169,6 +221,7 @@ const FixedFooter = styled.div`
   left: 0;
   right: 0;
   border-top: 2px solid #191027;
+  background-color: ${({ theme }) => theme.colors.darkPurple};
 `;
 
 const Centered = styled.div`
@@ -190,7 +243,7 @@ function getMessageBuckets(messages: Message[]): Array<Message[]> {
       }
 
       // We initialize the reducer with [[]] so buckets should always be non-empty.
-      const lastBucket = buckets[buckets.length -1] as Message[];
+      const lastBucket = buckets[buckets.length - 1] as Message[];
       if (lastBucket.length === 0) return [[message]];
 
       // If this is the initial iteration, initialize buckets.
@@ -202,7 +255,7 @@ function getMessageBuckets(messages: Message[]): Array<Message[]> {
       // If the last message in the last bucket is either sent to a different
       // address, undefined, sent is not set on it, or it's older than 5 minutes
       // from the current message, create a new bucket.
-      const lastInLastBucket = buckets[buckets.length -1]?.[0];
+      const lastInLastBucket = buckets[buckets.length - 1]?.[0];
       if (lastInLastBucket?.recipientAddress !== message.recipientAddress)
         return [...buckets, [message]];
       if (lastInLastBucket === undefined) return [...buckets, [message]];
@@ -214,7 +267,7 @@ function getMessageBuckets(messages: Message[]): Array<Message[]> {
       // If the first message in the last bucket is either undefined, sent is
       // not set on it, or it's older than an hour from the current message,
       // create a new bucket.
-      const firstInLastBucket = buckets[buckets.length-1]?.[0];
+      const firstInLastBucket = buckets[buckets.length - 1]?.[0];
       if (firstInLastBucket === undefined) return [...buckets, [message]];
       if (firstInLastBucket.sent === undefined) return [...buckets, [message]];
       if (isHourDifference(firstInLastBucket.sent, message.sent))

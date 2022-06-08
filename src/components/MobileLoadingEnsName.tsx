@@ -59,7 +59,7 @@ const MainContainer = styled.div`
 `;
 
 const Header = styled.h1`
-  color: #9867ce;
+  color: #7349e5;
   font-size: 2rem;
   text-align: center;
   margin-top: -20vh;

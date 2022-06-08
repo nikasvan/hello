@@ -58,6 +58,7 @@ export const GlobalStyles = createGlobalStyle`
     url('/assets/fonts/Inter.ttf')
       format('truetype-variations');
   font-weight: 100 1000;
+  font-display: swap;
 }
 
 @font-face {
@@ -67,6 +68,7 @@ export const GlobalStyles = createGlobalStyle`
     url('/assets/fonts/Montserrat.ttf')
       format('truetype-variations');
   font-weight: 100 1000;
+  font-display: swap;
 }
 
 @font-face {
@@ -76,6 +78,7 @@ export const GlobalStyles = createGlobalStyle`
     url('/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf')
       format('truetype-variations');
   font-weight: 100 1000;
+  font-display: swap;
 }
 
 

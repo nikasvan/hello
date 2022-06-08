@@ -21,7 +21,13 @@ export function useXmtpConversations() {
   useEffect(() => {
     const listConversations = async () => {
       if (!xmtp) return;
-      const convs = await xmtp.conversations.list();
+      let convs: Conversation[] = [];
+      try {
+        convs = await xmtp.conversations.list();
+      } catch (error) {
+        console.error('Caught an error with xmtp.conversations.list');
+      }
+
       dispatchConversations(convs);
       setIsLoading(false);
     };
@@ -32,11 +38,19 @@ export function useXmtpConversations() {
   useEffect(() => {
     const synchronizeConvos = async () => {
       if (!xmtp) return;
-      const conversationsStream = await xmtp.conversations.stream();
+      let conversationsStream: Stream<Conversation> | null = null;
+      try {
+        conversationsStream = await xmtp.conversations.stream();
+      } catch (error) {
+        console.error('Caught an error with xmtp.conversations.stream');
+      }
+
       // Save the stream so we can stop it when the component unmounts.
       setStream(conversationsStream);
-      for await (const conversation of conversationsStream) {
-        dispatchConversations([conversation]);
+      if (conversationsStream) {
+        for await (const conversation of conversationsStream) {
+          dispatchConversations([conversation]);
+        }
       }
     };
     synchronizeConvos();

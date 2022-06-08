@@ -45,7 +45,13 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
       if (!xmtp || !peerAddress || !isPeerInitialized) {
         return;
       }
-      const result = await xmtp.conversations.newConversation(peerAddress);
+      let result: Conversation | null = null;
+      try {
+        result = await xmtp.conversations.newConversation(peerAddress);
+      } catch (error) {
+        console.error('Caught an error with xmtp.newConversation');
+      }
+
       setConversation(result);
     };
     getConvo();
@@ -55,7 +61,12 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
   useEffect(() => {
     const listMessages = async () => {
       if (!conversation) return;
-      const msgs = await conversation.messages({ pageSize: 100 });
+      let msgs: Message[] = [];
+      try {
+        msgs = await conversation.messages({ pageSize: 100 });
+      } catch (error) {
+        console.error('Caught an error with xmtp.conversations.messages');
+      }
       setMessages(msgs);
     };
     listMessages();
@@ -65,13 +76,21 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
   useEffect(() => {
     const streamMessages = async () => {
       if (!conversation) return;
-      const messageStream = await conversation.streamMessages();
+      let messageStream: Stream<Message> | null = null;
+      try {
+        messageStream = await conversation.streamMessages();
+      } catch (error) {
+        console.error('Caught an error with xmtp.conversations.streamMessages');
+      }
+
       // Save the stream in state so we can stop the stream when the component unmounts.
-      setStream(messageStream);
-      for await (const msg of messageStream) {
-        setMessages((prevState) => {
-          return (prevState || []).concat([msg]);
-        });
+      if (messageStream) {
+        setStream(messageStream);
+        for await (const msg of messageStream) {
+          setMessages((prevState) => {
+            return (prevState || []).concat([msg]);
+          });
+        }
       }
     };
     streamMessages();
@@ -87,7 +106,11 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
   const sendMessage = useCallback(
     async (message: string) => {
       if (!conversation) return;
-      await conversation.send(message);
+      try {
+        await conversation.send(message);
+      } catch (error) {
+        console.error('Caught an error with xmtp.conversations.send');
+      }
     },
     [conversation]
   );
@@ -101,12 +124,8 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
     if (messages === undefined) return ConversationStatus.loadingMessages;
     if (messages.length === 0) return ConversationStatus.noMessages;
     if (messages.length > 0) return ConversationStatus.ready;
-    console.log('xmtp is', xmtp);
-    console.log('isPeerInitialized is', isPeerInitialized);
-    console.log('conversation is', conversation);
-    console.log('messages is', messages);
     return ConversationStatus.somethingWentWrong;
-  }, [xmtp, isPeerInitialized, conversation, messages]);
+  }, [xmtpStatus, isPeerInitialized, conversation, messages]);
 
   return {
     conversation,

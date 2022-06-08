@@ -38,20 +38,17 @@ export default function Landing() {
   const handleClickMetamask = useCallback(() => {
     setUserDidConnect(true);
     connect(metamaskConnector);
-    /* eslint-disable-next-line */
-  }, []);
+  }, [connect, metamaskConnector]);
 
   const handleClickCoinbase = useCallback(() => {
     setUserDidConnect(true);
     connect(coinbaseConnector);
-    /* eslint-disable-next-line */
-  }, []);
+  }, [coinbaseConnector, connect]);
 
   const handleClickWalletConnect = useCallback(() => {
     setUserDidConnect(true);
     connect(walletConnectConnector);
-    /* eslint-disable-next-line */
-  }, []);
+  }, [connect, walletConnectConnector]);
 
   useEffect(() => {
     if (isConnected) {
@@ -63,8 +60,7 @@ export default function Landing() {
         }
       }
     }
-    /* eslint-disable-next-line */
-  }, [isConnected, router]);
+  }, [doRedirectBack, isConnected, router, userDidConnect]);
 
   return (
     <Page>

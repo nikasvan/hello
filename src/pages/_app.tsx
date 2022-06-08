@@ -13,6 +13,7 @@ import {
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import PlausibleProvider from 'next-plausible';
 
 const alchemyKey = 'kmMb00nhQ0SWModX6lJLjXy_pVtiQnjx';
 
@@ -57,16 +58,20 @@ const wagmi = createClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
-      <WagmiProvider client={wagmi}>
-        <XmtpProvider>
-          <RedirectProvider>
-            <>
-              <GlobalStyles />
-              <Component {...pageProps} />
-            </>
-          </RedirectProvider>
-        </XmtpProvider>
-      </WagmiProvider>
+      <PlausibleProvider
+        enabled={Boolean(process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE)}
+        domain="daopanel.chat">
+        <WagmiProvider client={wagmi}>
+          <XmtpProvider>
+            <RedirectProvider>
+              <>
+                <GlobalStyles />
+                <Component {...pageProps} />
+              </>
+            </RedirectProvider>
+          </XmtpProvider>
+        </WagmiProvider>
+      </PlausibleProvider>
     </ThemeProvider>
   );
 }

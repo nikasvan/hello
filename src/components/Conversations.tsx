@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {
   ConversationsStatus,
   useActiveTab,
+  useDeviceDetect,
   useLocalStorage,
   useXmtp,
   useXmtpConversations,
@@ -19,6 +20,7 @@ import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileLoadingPage from 'components/MobileLoadingPage';
 
 export default function Conversations() {
+  const { isMobile } = useDeviceDetect();
   const { init, status: xmtpStatus } = useXmtp();
   const { conversations, status } = useXmtpConversations();
   const { visibilityState: isTabVisible } = useActiveTab();
@@ -148,20 +150,22 @@ export default function Conversations() {
       )}
       {xmtpStatus === XmtpStatus.ready &&
         status === ConversationsStatus.loading && <MobileLoadingPage />}
-      <List>
-        {sortedByTimestamp(conversations, timestamped).map(
-          (peerAddress: string) => {
-            return (
-              <Conversation
-                onLoadedOrNewMessage={handleConversationStatusEvent}
-                show={status === ConversationsStatus.ready}
-                key={peerAddress}
-                peerAddress={peerAddress}
-              />
-            );
-          }
-        )}
-      </List>
+      {status === ConversationsStatus.ready && (
+        <List isMobile={isMobile}>
+          {sortedByTimestamp(conversations, timestamped).map(
+            (peerAddress: string) => {
+              return (
+                <Conversation
+                  onLoadedOrNewMessage={handleConversationStatusEvent}
+                  show={status === ConversationsStatus.ready}
+                  key={peerAddress}
+                  peerAddress={peerAddress}
+                />
+              );
+            }
+          )}
+        </List>
+      )}
     </Page>
   );
 }
@@ -183,10 +187,13 @@ const GoToXmtp = styled.a`
   margin-left: 0.5rem;
 `;
 
-const List = styled.ul`
+const List = styled.ul<{ isMobile: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow: scroll;
+  height: ${({ isMobile }) => (isMobile ? 'calc(100vh - 200px)' : '100vh')};
+  z-index: 10;
 `;
 
 const Page = styled.div`

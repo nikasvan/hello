@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import Head from 'next/head';
 import Favicon from 'components/Favicon';
 
 export default class MyDocument extends Document {

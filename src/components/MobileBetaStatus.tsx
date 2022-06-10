@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 import Github from './Github';
+import MirrorWhite from '../../public/assets/images/mirror-white.png';
 
 export default function MobileBetaStatus() {
   return (
@@ -19,12 +20,27 @@ export default function MobileBetaStatus() {
         rel="noreferrer">
         <Github />
       </a>
+      <MirrorLink
+        href="https://www.github.com/daopanel"
+        target="_blank"
+        rel="noreferrer"
+      />
       <PublicBeta href="https://docs.xmtp.org/" target="_blank">
         public beta
       </PublicBeta>
     </BottomRight>
   );
 }
+
+const MirrorLink = styled.a`
+  display: block;
+  background-image: url(${MirrorWhite.src});
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 24px;
+  width: 18px;
+  margin-left: 3px;
+`;
 
 const PublicBeta = styled.a`
   font-weight: 900;
@@ -34,6 +50,7 @@ const PublicBeta = styled.a`
   cursor: pointer;
   text-decoration: none;
   color: #f77272;
+  margin-left: 10px;
 `;
 
 const BottomRight = styled.div`
@@ -44,9 +61,6 @@ const BottomRight = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  & > a:first-child {
-    opacity: 0.12;
-  }
   & > a {
     margin-right: 10px;
   }

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import Favicon from 'components/Favicon';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -11,7 +12,12 @@ export default class MyDocument extends Document {
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App: any) => (props: any) =>
-            sheet.collectStyles(<App {...props} />),
+            sheet.collectStyles(
+              <>
+                <Favicon />
+                <App {...props} />
+              </>
+            ),
         });
 
       const initialProps = await Document.getInitialProps(ctx);

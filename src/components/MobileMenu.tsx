@@ -94,7 +94,7 @@ export default function MobileMenu({
         />
       </ConnectedWrapper>
       <MenuItems>
-        <Link href={'/all-messages'} passHref>
+        <Link href={'/conversations'} passHref>
           <MenuItem>
             <Image
               src={'/assets/images/chat-mob.svg'}

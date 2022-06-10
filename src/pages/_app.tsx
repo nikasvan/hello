@@ -60,9 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
   // checking for notifications at the Top Level
   useEffect(() => {
     const CheckForNotification = async () => {
-      if (!('Notification' in window)) {
-        alert('This browser does not support desktop notification');
-      } else {
+      if ('Notification' in window) {
         if (Notification.permission === 'default') {
           Notification.requestPermission()
             .then(function (p) {

@@ -71,7 +71,10 @@ export default function Landing() {
       <MaxContentWidth>
         <Headline>Hello.</Headline>
         <SubHeader>
-          from <Wordmark>daopanel</Wordmark>
+          from{' '}
+          <Wordmark href="https://daopanel.com" target="_blank">
+            daopanel
+          </Wordmark>
         </SubHeader>
         <ConnectorList>
           {isMetaMask && (
@@ -203,10 +206,11 @@ const SubHeader = styled.h2`
   margin-bottom: 3rem;
 `;
 
-const Wordmark = styled.span`
+const Wordmark = styled.a`
   font-size: 18px;
   font-weight: 500;
   color: #ffffff;
+  display: inline;
 `;
 
 const ConnectorList = styled.ul`

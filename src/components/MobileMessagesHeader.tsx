@@ -27,7 +27,7 @@ export default function MobileMessagesHeader({
         width={20}
         height={20}
         src={ArrowLeftWhite}
-        onClick={() => router.back()}
+        onClick={() => router.push('/conversations')}
       />
     </MobileFixedHeader>
   );

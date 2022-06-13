@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Avatar from './Avatar';
 import { useEnsName } from 'wagmi';
+import { shortDate } from 'utils/date';
 
 export interface MobileMessageSentByProps {
   address: string;
@@ -54,16 +55,6 @@ const SentAt = styled.time`
   letter-spacing: -0.01em;
   color: #75668c;
 `;
-
-function shortDate(d: Date | undefined): string {
-  if (!d) return 'N/A';
-
-  return d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 
 // This function can be used as a standard for shorthands throughout the app(can be moved in 'utils' folder)
 function shortAddress(str: string): string {

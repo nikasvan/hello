@@ -7,8 +7,8 @@ import Dropdown from './Dropdown';
 import { FetchEnsAddressResult } from '@wagmi/core';
 
 interface MobileMessageHeaderProps {
-  peerAddress: FetchEnsAddressResult | undefined;
   titleText: string;
+  peerAddress?: FetchEnsAddressResult | undefined;
   onMenuClick: () => unknown;
 }
 

@@ -119,6 +119,7 @@ const ReferSubtitle = styled.h6`
     line-height: 24px;
     color: ${({ theme }) => theme.colors.purple};
     letter-spacing: -0.01em;
+    cursor: pointer;
   }
 `;
 

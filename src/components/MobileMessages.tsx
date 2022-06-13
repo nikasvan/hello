@@ -93,6 +93,7 @@ export default function Messages() {
     return (
       <>
         <MobileMessagesHeader
+          peerAddress={peerAddress}
           onMenuClick={openMenu}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
@@ -104,6 +105,7 @@ export default function Messages() {
     return (
       <Page>
         <MobileMessagesHeader
+          peerAddress={peerAddress}
           onMenuClick={openMenu}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
@@ -126,6 +128,7 @@ export default function Messages() {
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
       <MobileMessagesHeader
+        peerAddress={peerAddress}
         onMenuClick={openMenu}
         titleText={peerEnsName || peerAddress || 'N/A'}
       />

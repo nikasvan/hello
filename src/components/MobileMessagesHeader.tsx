@@ -3,13 +3,17 @@ import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Dropdown from './Dropdown';
+import { FetchEnsAddressResult } from '@wagmi/core';
 
 interface MobileMessageHeaderProps {
+  peerAddress: FetchEnsAddressResult | undefined;
   titleText: string;
   onMenuClick: () => unknown;
 }
 
 export default function MobileMessagesHeader({
+  peerAddress,
   titleText,
   onMenuClick,
 }: MobileMessageHeaderProps) {
@@ -22,7 +26,10 @@ export default function MobileMessagesHeader({
         src={'/assets/images/MobileWhiteHamburgerMenu.svg'}
         onClick={onMenuClick}
       />
-      <UserDisplay>{shortAddress(titleText)}</UserDisplay>
+      <Address>
+        <UserDisplay>{shortAddress(titleText)}</UserDisplay>
+        {peerAddress && <Dropdown address={peerAddress} />}
+      </Address>
       <GoBack
         width={20}
         height={20}
@@ -46,6 +53,11 @@ const UserDisplay = styled.h1`
   order: 0;
   flex-grow: 0;
   margin: 0px 16px;
+`;
+
+const Address = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const GoBack = styled(Image)`

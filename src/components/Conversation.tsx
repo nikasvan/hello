@@ -8,6 +8,8 @@ import Avatar from './Avatar';
 import MobileLoadingText from 'components/MobileLoadingText';
 import { Message } from '@xmtp/xmtp-js';
 import type { FetchEnsNameResult } from '@wagmi/core';
+import Dropdown from './Dropdown';
+
 interface ConversationProps {
   peerAddress: string;
   show: boolean;
@@ -84,6 +86,7 @@ export default function Conversation(props: ConversationProps) {
             isRequest={false}
           />
         )}
+        <Dropdown address={props.peerAddress} />
       </div>
     </Container>
   );
@@ -111,7 +114,7 @@ const Container = styled.div<{ isRequest: boolean }>`
   }
   & > div:last-child {
     display: flex;
-    flex-direction: ${({ isRequest }) => (isRequest ? 'row' : 'column')};
+    flex-direction: 'row';
     transition: ${({ isRequest }) => (isRequest ? 'all 0.4s' : 'none')};
     padding: ${({ isRequest }) => (isRequest ? '4px 8px' : '0')};
     border-radius: ${({ isRequest }) => (isRequest ? '4px' : '0')};

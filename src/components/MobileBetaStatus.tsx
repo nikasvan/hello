@@ -61,7 +61,13 @@ const BottomRight = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  width: 100%;
   & > a {
     margin-right: 10px;
+  }
+  @media (max-width: 768px) {
+    justify-content: center;
+    right: 0;
+    padding-left: 20px;
   }
 `;

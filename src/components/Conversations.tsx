@@ -18,6 +18,7 @@ import MobileDisclaimerCard from './MobileDisclaimerCard';
 import { Conversation as ConversationType } from '@xmtp/xmtp-js/dist/types/src';
 import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileLoadingPage from 'components/MobileLoadingPage';
+import MobileBetaStatus from './MobileBetaStatus';
 
 export default function Conversations() {
   const { isMobile } = useDeviceDetect();
@@ -166,6 +167,7 @@ export default function Conversations() {
           )}
         </List>
       )}
+      <MobileBetaStatus />
     </Page>
   );
 }
@@ -192,7 +194,8 @@ const List = styled.ul<{ isMobile: boolean }>`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  height: ${({ isMobile }) => (isMobile ? 'calc(100vh - 200px)' : '100vh')};
+  height: ${({ isMobile }) =>
+    isMobile ? 'calc(100vh - 250px)' : 'calc(100vh - 160px)'};
   z-index: 10;
 `;
 

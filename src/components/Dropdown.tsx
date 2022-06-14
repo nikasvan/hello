@@ -18,18 +18,18 @@ const Dropdown = ({ address }: DropdownProps) => {
 
   return (
     <Container>
-      <button
+      <div
         onClick={(e) => {
           e.stopPropagation();
           setShowMenu((prevState) => !prevState);
         }}>
         <Image
-          src="/assets/images/3-vertical-dots.svg"
+          src="/assets/images/hamburger-menu.svg"
           width="20"
           height="20"
           alt="three-dots"
         />
-      </button>
+      </div>
       {showMenu && (
         <DropdownWrapper>
           <StyledLink
@@ -62,6 +62,9 @@ const Dropdown = ({ address }: DropdownProps) => {
 const Container = styled.div`
   position: relative;
   margin-left: 5px;
+  & > div:first-child:hover {
+    cursor: pointer;
+  }
 `;
 
 const DropdownWrapper = styled.div`
@@ -70,8 +73,8 @@ const DropdownWrapper = styled.div`
   top: 30px;
   border-radius: 4px;
   background-color: #fff;
-  width: 128px;
-  height: 53px;
+  width: 130px;
+  height: 60px;
   padding: 8px;
 `;
 

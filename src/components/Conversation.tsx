@@ -153,6 +153,7 @@ const StyledSubTitle = styled(Text)`
   font-size: 16px;
   line-height: 19px;
   letter-spacing: -0.01em;
+  word-break: break-word;
 `;
 
 const StyledText = styled(Text)<{ isRequest: boolean }>`
@@ -171,6 +172,6 @@ function shortAddress(str: string): string {
 }
 
 function previewMessage(message: string): string {
-  if (message.length < 15) return message;
-  return message.slice(0, 15) + '...';
+  if (message.length < 50) return message;
+  return message.slice(0, 50) + '...';
 }

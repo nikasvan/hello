@@ -149,8 +149,9 @@ export default function Messages() {
       {status === ConversationStatus.noPeerAvailable && (
         <Centered>
           <MobileStatusCard
+            noPeerAvailable
             title="Problem connecting to peer"
-            subtitle="Peer has not yet joined the XMTP network..."
+            subtitle="This address has not signed into XMTP yet."
             buttonText=""
             isLoading={false}
             isError={true}

@@ -9,6 +9,7 @@ import MobileLoadingText from 'components/MobileLoadingText';
 import { Message } from '@xmtp/xmtp-js';
 import type { FetchEnsNameResult } from '@wagmi/core';
 import Dropdown from './Dropdown';
+import { shortDate } from 'utils/date';
 
 interface ConversationProps {
   peerAddress: string;
@@ -154,6 +155,7 @@ const StyledSubTitle = styled(Text)`
   font-size: 16px;
   line-height: 19px;
   letter-spacing: -0.01em;
+  word-break: break-word;
 `;
 
 const StyledText = styled(Text)<{ isRequest: boolean }>`
@@ -167,21 +169,11 @@ const StyledText = styled(Text)<{ isRequest: boolean }>`
   margin-bottom: ${({ isRequest }) => (isRequest ? '0' : '5px')};
 `;
 
-function shortDate(d: Date | undefined): string {
-  if (!d) return 'N/A';
-
-  return d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 function shortAddress(str: string): string {
   return str.slice(0, 6) + '...' + str.slice(-4);
 }
 
 function previewMessage(message: string): string {
-  if (message.length < 15) return message;
-  return message.slice(0, 15) + '...';
+  if (message.length < 50) return message;
+  return message.slice(0, 50) + '...';
 }

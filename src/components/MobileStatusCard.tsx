@@ -11,6 +11,7 @@ export interface MobileStatusCardProps {
   loadingText?: string;
   isError: boolean;
   errorText?: string;
+  noPeerAvailable?: boolean;
   onClick: () => void;
 }
 export default function MobileStatusCard({
@@ -21,6 +22,7 @@ export default function MobileStatusCard({
   loadingText,
   isError,
   errorText,
+  noPeerAvailable = false,
   onClick,
 }: MobileStatusCardProps) {
   return (
@@ -42,6 +44,19 @@ export default function MobileStatusCard({
       )}
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
+      {noPeerAvailable && (
+        <ReferSubtitle>
+          Invite them to try{' '}
+          <a href="https://daopanel.chat" target="_blank" rel="noreferrer">
+            daopanel.chat
+          </a>{' '}
+          or test it out by messaging the daopanel founder{' '}
+          <Link href={'/seanwbren.eth'} passHref>
+            <h6>seanwbren.eth</h6>
+          </Link>
+        </ReferSubtitle>
+      )}
+
       <Button onClick={onClick}>
         {isLoading ? loadingText : isError ? errorText : buttonText}
       </Button>
@@ -81,6 +96,31 @@ const Subtitle = styled.h6`
   align-items: center;
   letter-spacing: -0.01em;
   color: #dad0e6;
+`;
+
+const ReferSubtitle = styled.h6`
+  margin-top: 8px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: #dad0e6;
+  & > a {
+    font-weight: normal;
+    text-decoration: none;
+    color: ${({ theme }) => theme.colors.purple};
+  }
+  & > a:hover {
+  }
+  & > h6 {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: ${({ theme }) => theme.colors.purple};
+    letter-spacing: -0.01em;
+    cursor: pointer;
+  }
 `;
 
 const Button = styled.button`

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import Favicon from 'components/Favicon';
+import Header from 'components/Header';
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -14,7 +14,7 @@ export default class MyDocument extends Document {
           enhanceApp: (App: any) => (props: any) =>
             sheet.collectStyles(
               <>
-                <Favicon />
+                <Header />
                 <App {...props} />
               </>
             ),

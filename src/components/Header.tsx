@@ -1,8 +1,9 @@
 import Head from 'next/head';
 
-const Favicon = (): JSX.Element => {
+const Header = (): JSX.Element => {
   return (
     <Head>
+      <title>daopanel</title>
       <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -34,4 +35,4 @@ const Favicon = (): JSX.Element => {
   );
 };
 
-export default Favicon;
+export default Header;

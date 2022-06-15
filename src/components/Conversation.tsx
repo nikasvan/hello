@@ -8,6 +8,8 @@ import Avatar from './Avatar';
 import MobileLoadingText from 'components/MobileLoadingText';
 import { Message } from '@xmtp/xmtp-js';
 import type { FetchEnsNameResult } from '@wagmi/core';
+import { shortDate } from 'utils/date';
+
 interface ConversationProps {
   peerAddress: string;
   show: boolean;
@@ -163,16 +165,6 @@ const StyledText = styled(Text)<{ isRequest: boolean }>`
   margin-left: 6px;
   margin-bottom: ${({ isRequest }) => (isRequest ? '0' : '5px')};
 `;
-
-function shortDate(d: Date | undefined): string {
-  if (!d) return 'N/A';
-
-  return d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 
 function shortAddress(str: string): string {
   return str.slice(0, 6) + '...' + str.slice(-4);

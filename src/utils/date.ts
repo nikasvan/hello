@@ -2,22 +2,37 @@
 
 export const shortDate = (d: Date | undefined): string => {
   if (!d) return 'N/A';
-  const now = new Date();
-  const millsecBetweenDates = Math.abs(d.getTime() - now.getTime());
-  const hoursBetweenDates = millsecBetweenDates / (60 * 60 * 1000);
+  const shortDateText = checkDateIsTodayOrYesterday(d);
+  return shortDateText;
+};
 
-  if (hoursBetweenDates < 24) {
-    const formattedDate = d.toLocaleTimeString('en-us', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    const dateText = `Today at ${formattedDate}`;
-    return dateText;
-  } else {
-    return d.toLocaleDateString('en-us', {
+const checkDateIsTodayOrYesterday = (someDate: Date) => {
+  const dateWithoutTime = (d: Date) => new Date(d.toDateString());
+
+  const today = dateWithoutTime(new Date());
+  const yesterday = dateWithoutTime(new Date());
+
+  yesterday.setDate(today.getDate() - 1);
+
+  const comparisonDateTime = dateWithoutTime(someDate).getTime();
+
+  const formattedDayDate = someDate.toLocaleTimeString('en-us', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  if (
+    comparisonDateTime > today.getTime() ||
+    comparisonDateTime < yesterday.getTime()
+  ) {
+    return someDate.toLocaleDateString('en-us', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
+  } else if (comparisonDateTime === today.getTime()) {
+    return `Today at ${formattedDayDate}`;
+  } else {
+    return `Yesterday at ${formattedDayDate}`;
   }
 };

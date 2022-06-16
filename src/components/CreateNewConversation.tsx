@@ -99,17 +99,6 @@ const HeadlineContainer = styled.div`
   align-items: center;
   min-width: 350px;
 `;
-const Headline = styled.h2`
-  font-weight: 400;
-  font-family: ${({ theme }) => theme.fontFamily.Montserrat};
-  font-size: 24px;
-  color: #dad0e5;
-  order: 1;
-
-  @media (max-width: 950.5px) {
-    display: none;
-  }
-`;
 
 const UserInput = styled.input`
   font-family: ${({ theme }) => theme.fontFamily.Montserrat};

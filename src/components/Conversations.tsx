@@ -28,7 +28,7 @@ export default function Conversations() {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showNewConversation, setShowNewConversation] =
     useState<boolean>(false);
-
+  const [showList, setShowList] = useState<boolean>(false);
   const [timestamped, setTimestamped] = useState<
     Record<string, Date | undefined>
   >({});
@@ -76,6 +76,14 @@ export default function Conversations() {
     },
     [allConversationsLoaded, isTabVisible, sendNewMessageNotification]
   );
+
+  useEffect(() => {
+    if (
+      Object.keys(conversations).length === Object.keys(timestamped).length &&
+      status === ConversationsStatus.ready
+    )
+      setShowList(true);
+  }, [conversations, showList, status, timestamped]);
 
   const doOpenMenu = () => {
     setShowMenu(true);
@@ -157,7 +165,7 @@ export default function Conversations() {
               return (
                 <Conversation
                   onLoadedOrNewMessage={handleConversationStatusEvent}
-                  show={status === ConversationsStatus.ready}
+                  show={showList}
                   key={peerAddress}
                   peerAddress={peerAddress}
                 />

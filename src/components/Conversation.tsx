@@ -9,10 +9,11 @@ import MobileLoadingText from 'components/MobileLoadingText';
 import { Message } from '@xmtp/xmtp-js';
 import type { FetchEnsNameResult } from '@wagmi/core';
 import { shortDate } from 'utils/date';
+import MobileLoadingPage from './MobileLoadingPage';
 
 interface ConversationProps {
   peerAddress: string;
-  show: boolean;
+  show?: boolean;
   onLoadedOrNewMessage: (
     ensName: FetchEnsNameResult | undefined,
     peerAddress: string,
@@ -50,8 +51,7 @@ export default function Conversation(props: ConversationProps) {
     /* eslint-disable-next-line */
   }, [isConversationLoading, props.peerAddress, messages.length]);
 
-  if (!props.show) return null;
-
+  if (isConversationLoading || !props.show) return <MobileLoadingPage />;
   return (
     <Container onClick={goToConversation} isRequest={false}>
       <div>

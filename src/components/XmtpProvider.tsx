@@ -10,6 +10,8 @@ import { Client } from '@xmtp/xmtp-js';
 import Xmtp, { XmtpStatus } from 'contexts/XmtpContext';
 import { useSigner, useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
+import { usePlausibleMetrics } from 'hooks';
+import crypto from 'crypto';
 
 function usePreviousString(value: string | undefined) {
   const ref = useRef<string | undefined>();
@@ -29,6 +31,7 @@ const XmtpProvider = (props: { children: ReactElement }) => {
   const [signatureDenied, setSignatureDenied] = useState<boolean | undefined>(
     undefined
   );
+  const { recordXmtpInit } = usePlausibleMetrics();
 
   useEffect(() => {
     if (
@@ -43,6 +46,8 @@ const XmtpProvider = (props: { children: ReactElement }) => {
     if (wallet) {
       try {
         setSignatureDenied(false);
+        const address = await wallet.getAddress();
+        recordXmtpInit(address);
         const client = await Client.create(wallet);
         setClient(client);
       } catch (error) {

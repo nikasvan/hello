@@ -5,6 +5,7 @@ export * from './useXmtpConversations';
 export * from './useRouterEnsData';
 export * from './useWindowSize';
 export * from './useIsMetaMask';
+export * from './usePlausibleMetrics';
 
 import useActiveTab from './useActiveTab';
 import usePreviousVal from './usePreviousVal';

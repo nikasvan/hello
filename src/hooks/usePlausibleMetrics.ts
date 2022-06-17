@@ -6,9 +6,11 @@ export function usePlausibleMetrics() {
 
   const recordXmtpInit = useCallback(
     (address: string) => {
-      plausible('xmtpInitialized', {
+      const hash = sha256(address);
+      console.log('Address hash:', hash);
+      plausible('xmtpInit', {
         // Hash the address to avoid sending an PII
-        props: { hashOfAddress: sha256(address) },
+        props: { hashOfAddress: hash },
       });
     },
     [plausible]

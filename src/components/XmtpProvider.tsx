@@ -11,7 +11,6 @@ import Xmtp, { XmtpStatus } from 'contexts/XmtpContext';
 import { useSigner, useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
 import { usePlausibleMetrics } from 'hooks';
-import crypto from 'crypto';
 
 function usePreviousString(value: string | undefined) {
   const ref = useRef<string | undefined>();

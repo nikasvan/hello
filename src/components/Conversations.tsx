@@ -222,7 +222,7 @@ export default function Conversations() {
         <List isMobile={isMobile}>
           {sortedByTimestamp(conversations, messageInfo).map(
             (peerAddress: string) => {
-              const check = () => {
+              const checkLastMessage = () => {
                 if (
                   Object.keys(messageInfo).length !== 0 &&
                   messageInfo[peerAddress]?.isLastMessage
@@ -238,7 +238,7 @@ export default function Conversations() {
                   show={showList}
                   key={peerAddress}
                   peerAddress={peerAddress}
-                  isLastMessage={check()}
+                  isLastMessage={checkLastMessage()}
                 />
               );
             }

@@ -21,7 +21,7 @@ export default function MobileBetaStatus() {
         <Github />
       </a>
       <MirrorLink
-        href="https://www.github.com/daopanel"
+        href="https://www.mirror.xyz/0xdaopanel.eth"
         target="_blank"
         rel="noreferrer"
       />

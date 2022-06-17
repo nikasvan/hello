@@ -8,7 +8,7 @@ export function usePlausibleMetrics() {
     (address: string) => {
       plausible('xmtpInitialized', {
         // Hash the address to avoid sending an PII
-        props: sha256(address),
+        props: { hashOfAddress: sha256(address) },
       });
     },
     [plausible]

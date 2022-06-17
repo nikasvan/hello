@@ -14,7 +14,7 @@ import MobileLoadingPage from './MobileLoadingPage';
 interface ConversationProps {
   peerAddress: string;
   show?: boolean;
-  isLastMessage?: boolean;
+  isLastMessage: boolean;
   onLoadedOrNewMessage: (
     ensName: FetchEnsNameResult | undefined,
     peerAddress: string,

@@ -20,6 +20,7 @@ import { XmtpStatus } from 'contexts/XmtpContext';
 import MobileStatusCard from './MobileStatusCard';
 import { useRouterEnsData } from 'hooks';
 import MobileLoadingEnsName from './MobileLoadingEnsName';
+import { ConvosList } from 'contexts/conversations';
 
 export default function Messages() {
   const { isMobile } = useDeviceDetect();
@@ -89,20 +90,23 @@ export default function Messages() {
   useEffect(() => {
     const lastMessageID = messages[messages.length - 1]?.id;
 
-    if (peerAddress && lastMessageID) {
-      if (lastConvosByID[peerAddress].lastMessageID !== lastMessageID) {
-        setLastConvosByID((prevState: any) => {
-          if (prevState[peerAddress]) {
-            return {
-              ...prevState,
-              [peerAddress]: {
-                ...prevState[peerAddress].lastMessageID,
-                lastMessageID,
-              },
-            };
-          }
-        });
-      }
+    if (
+      peerAddress &&
+      lastMessageID &&
+      lastConvosByID[peerAddress] &&
+      lastConvosByID[peerAddress].lastMessageID !== lastMessageID
+    ) {
+      setLastConvosByID((prevState: ConvosList) => {
+        if (prevState[peerAddress]) {
+          return {
+            ...prevState,
+            [peerAddress]: {
+              lastMessageID,
+            },
+          };
+        }
+        return null;
+      });
     }
   }, [lastConvosByID, messages, peerAddress, setLastConvosByID]);
 

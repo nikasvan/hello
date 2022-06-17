@@ -13,6 +13,7 @@ import { shortDate } from 'utils/date';
 interface ConversationProps {
   peerAddress: string;
   show: boolean;
+  isLastMessage?: boolean;
   onLoadedOrNewMessage: (
     ensName: FetchEnsNameResult | undefined,
     peerAddress: string,
@@ -72,20 +73,24 @@ export default function Conversation(props: ConversationProps) {
             <StyledSubTitle
               tag="span"
               text={previewMessage(`${lastMessage?.content}`)}
+              isLastMessage={props.isLastMessage}
             />
           )}
         </div>
       </div>
       <div>
-        {lastMessage == undefined ? (
-          <MobileLoadingText />
-        ) : (
-          <StyledText
-            tag="span"
-            text={`${shortDate(lastMessage?.sent)}`}
-            isRequest={false}
-          />
-        )}
+        <div>
+          {lastMessage == undefined ? (
+            <MobileLoadingText />
+          ) : (
+            <StyledText
+              tag="span"
+              text={`${shortDate(lastMessage?.sent)}`}
+              isRequest={false}
+            />
+          )}
+        </div>
+        {props.isLastMessage && <StyledDot />}
       </div>
     </Container>
   );
@@ -113,16 +118,21 @@ const Container = styled.div<{ isRequest: boolean }>`
   }
   & > div:last-child {
     display: flex;
-    flex-direction: ${({ isRequest }) => (isRequest ? 'row' : 'column')};
-    transition: ${({ isRequest }) => (isRequest ? 'all 0.4s' : 'none')};
-    padding: ${({ isRequest }) => (isRequest ? '4px 8px' : '0')};
-    border-radius: ${({ isRequest }) => (isRequest ? '4px' : '0')};
-    background-color: ${({ isRequest }) => (isRequest ? '#433764' : 'none')};
-    align-items: ${({ isRequest }) => (isRequest ? 'center' : 'flex-end')};
-    &:hover {
-      background-color: ${({ isRequest, theme }) =>
-        isRequest ? theme.colors.purple : 'none'};
-      cursor: ${({ isRequest }) => (isRequest ? 'pointer' : 'default')};
+    flex-direction: row;
+    align-items: center;
+    & > div:first-child {
+      display: flex;
+      flex-direction: ${({ isRequest }) => (isRequest ? 'row' : 'column')};
+      transition: ${({ isRequest }) => (isRequest ? 'all 0.4s' : 'none')};
+      padding: ${({ isRequest }) => (isRequest ? '4px 8px' : '0')};
+      border-radius: ${({ isRequest }) => (isRequest ? '4px' : '0')};
+      background-color: ${({ isRequest }) => (isRequest ? '#433764' : 'none')};
+      align-items: ${({ isRequest }) => (isRequest ? 'center' : 'flex-end')};
+      &:hover {
+        background-color: ${({ isRequest, theme }) =>
+          isRequest ? theme.colors.purple : 'none'};
+        cursor: ${({ isRequest }) => (isRequest ? 'pointer' : 'default')};
+      }
     }
   }
 
@@ -145,11 +155,11 @@ const StyledTitle = styled(Text)`
   margin-bottom: 5px;
 `;
 
-const StyledSubTitle = styled(Text)`
+const StyledSubTitle = styled(Text)<{ isLastMessage: boolean }>`
   color: ${({ theme }) => theme.colors.lightPurple};
   letter-spacing: -0.01em;
   font-style: normal;
-  font-weight: 400;
+  font-weight: ${({ isLastMessage }) => (isLastMessage ? 'bold' : '400')};
   font-size: 16px;
   line-height: 19px;
   letter-spacing: -0.01em;
@@ -164,7 +174,14 @@ const StyledText = styled(Text)<{ isRequest: boolean }>`
   line-height: 17px;
   letter-spacing: -0.01em;
   margin-left: 6px;
-  margin-bottom: ${({ isRequest }) => (isRequest ? '0' : '5px')};
+`;
+
+const StyledDot = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.purple};
+  margin-left: 8px;
 `;
 
 function shortAddress(str: string): string {

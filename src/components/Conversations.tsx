@@ -25,14 +25,29 @@ export default function Conversations() {
   const { conversations, status } = useXmtpConversations();
   const { visibilityState: isTabVisible } = useActiveTab();
   const [hasInitialized, setHasInitialized] = useLocalStorage('hasInitialized');
+  const [lastConvosByID, setLastConvosByID] = useLocalStorage('lastConvosByID');
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showNewConversation, setShowNewConversation] =
     useState<boolean>(false);
-
-  const [timestamped, setTimestamped] = useState<
-    Record<string, Date | undefined>
-  >({});
+  const [timestamped, setTimestamped] = useState({});
   const [numLoaded, setNumLoaded] = useState<number>(0);
+
+  useEffect(() => {
+    if (!lastConvosByID && Object.keys(conversations).length !== 0) {
+      const conversationsIDs = Object.keys(conversations);
+      const lastConvosByIDObj = conversationsIDs.reduce(
+        (accumulator, value) => {
+          return {
+            ...accumulator,
+            [value]: { lastMessageID: '' },
+          };
+        },
+        {}
+      );
+
+      setLastConvosByID(lastConvosByIDObj);
+    }
+  }, [conversations, lastConvosByID, setLastConvosByID]);
 
   const allConversationsLoaded = useMemo(() => {
     return numLoaded > 0 && numLoaded === Object.entries(conversations).length;
@@ -63,13 +78,40 @@ export default function Conversations() {
         sendNewMessageNotification(messages, ensName, peerAddress);
       }
 
+      let isLastMessage = false;
+
+      if (!lastConvosByID[peerAddress]?.lastMessageID) {
+        const lastMessageID = messages[messages.length - 1].id;
+        setLastConvosByID((prevState: any) => {
+          if (prevState[peerAddress]) {
+            return {
+              ...prevState,
+              [peerAddress]: {
+                ...prevState[peerAddress].lastMessageID,
+                lastMessageID,
+              },
+            };
+          }
+        });
+      } else {
+        const savedLastMessageID = lastConvosByID[peerAddress].lastMessageID;
+        const currentLastMessageID = messages[messages.length - 1].id;
+        if (savedLastMessageID !== currentLastMessageID) {
+          // handle unread messages
+          isLastMessage = true;
+        } else {
+          // handle read messages - DO NOTHING?
+          isLastMessage = false;
+        }
+      }
+
       const lastMessage = messages[messages.length - 1];
       const timestamp = lastMessage ? lastMessage.sent : new Date();
 
       setTimestamped((prevState) => {
         return {
           ...prevState,
-          [peerAddress]: timestamp,
+          [peerAddress]: { timestamp, isLastMessage },
         };
       });
       if (!allConversationsLoaded) setNumLoaded((prevState) => prevState + 1);
@@ -152,14 +194,25 @@ export default function Conversations() {
         status === ConversationsStatus.loading && <MobileLoadingPage />}
       {status === ConversationsStatus.ready && (
         <List isMobile={isMobile}>
-          {sortedByTimestamp(conversations, timestamped).map(
+          {sortedByTimestamp(conversations, timestamped, lastConvosByID).map(
             (peerAddress: string) => {
+              const check = () => {
+                if (Object.keys(timestamped).length !== 0) {
+                  if (timestamped[peerAddress]?.isLastMessage) {
+                    return timestamped[peerAddress].isLastMessage;
+                  }
+                  return false;
+                }
+                return false;
+              };
+
               return (
                 <Conversation
                   onLoadedOrNewMessage={handleConversationStatusEvent}
                   show={status === ConversationsStatus.ready}
                   key={peerAddress}
                   peerAddress={peerAddress}
+                  isLastMessage={check()}
                 />
               );
             }

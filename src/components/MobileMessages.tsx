@@ -5,6 +5,7 @@ import {
   useActiveTab,
   usePreviousVal,
   useDeviceDetect,
+  useLocalStorage,
 } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -24,6 +25,8 @@ export default function Messages() {
   const { isMobile } = useDeviceDetect();
 
   const { init, status: xmtpStatus } = useXmtp();
+  const [lastConvosByID, setLastConvosByID] = useLocalStorage('lastConvosByID');
+
   const router = useRouter();
   const {
     name: peerEnsName,
@@ -82,6 +85,26 @@ export default function Messages() {
     },
     [sendMessage]
   );
+
+  useEffect(() => {
+    const lastMessageID = messages[messages.length - 1]?.id;
+
+    if (peerAddress && lastMessageID) {
+      if (lastConvosByID[peerAddress].lastMessageID !== lastMessageID) {
+        setLastConvosByID((prevState: any) => {
+          if (prevState[peerAddress]) {
+            return {
+              ...prevState,
+              [peerAddress]: {
+                ...prevState[peerAddress].lastMessageID,
+                lastMessageID,
+              },
+            };
+          }
+        });
+      }
+    }
+  }, [lastConvosByID, messages, peerAddress, setLastConvosByID]);
 
   const buckets = getMessageBuckets(messages.map((x) => x).reverse());
 

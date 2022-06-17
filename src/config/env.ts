@@ -24,7 +24,10 @@ export class Env {
 
   public static domain() {
     if (Env.isMain()) return 'daopanel.chat';
-    if (Env.isDevelop()) return 'devpanel.chat';
+    if (Env.isDevelop()) {
+      console.log('domain is devpanel.chat');
+      return 'devpanel.chat';
+    }
     return 'localhost:3000';
   }
 

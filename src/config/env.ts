@@ -24,18 +24,11 @@ export class Env {
 
   public static domain() {
     if (Env.isMain()) return 'daopanel.chat';
-    if (Env.isDevelop()) {
-      console.log('domain is devpanel.chat');
-      return 'devpanel.chat';
-    }
+    if (Env.isDevelop()) return 'devpanel.chat';
     return 'localhost:3000';
   }
 
   public static enablePlausible() {
-    console.log(
-      'Plausibe is enabled:',
-      process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE
-    );
     return Boolean(process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE);
   }
 

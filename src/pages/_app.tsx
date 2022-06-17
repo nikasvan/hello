@@ -15,6 +15,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { useEffect } from 'react';
 import PlausibleProvider from 'next-plausible';
+import { Env } from 'config';
 
 const alchemyKey = 'kmMb00nhQ0SWModX6lJLjXy_pVtiQnjx';
 
@@ -88,7 +89,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <PlausibleProvider
         enabled={Boolean(process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE)}
-        domain="daopanel.chat">
+        domain={Env.domain()}>
         <WagmiProvider client={wagmi}>
           <XmtpProvider>
             <RedirectProvider>

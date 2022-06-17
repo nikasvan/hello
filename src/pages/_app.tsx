@@ -87,9 +87,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
   return (
     <ThemeProvider theme={theme}>
-      <PlausibleProvider
-        enabled={Boolean(process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE)}
-        domain={Env.domain()}>
+      <PlausibleProvider enabled={Env.enablePlausible()} domain={Env.domain()}>
         <WagmiProvider client={wagmi}>
           <XmtpProvider>
             <RedirectProvider>

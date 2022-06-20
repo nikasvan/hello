@@ -10,6 +10,7 @@ import { Client } from '@xmtp/xmtp-js';
 import Xmtp, { XmtpStatus } from 'contexts/XmtpContext';
 import { useSigner, useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
+import { CustomEncoder } from 'utils/encoder';
 
 function usePreviousString(value: string | undefined) {
   const ref = useRef<string | undefined>();
@@ -43,7 +44,9 @@ const XmtpProvider = (props: { children: ReactElement }) => {
     if (wallet) {
       try {
         setSignatureDenied(false);
-        const client = await Client.create(wallet);
+        const client = await Client.create(wallet, {
+          codecs: [new CustomEncoder()],
+        });
         setClient(client);
       } catch (error) {
         setClient(null);

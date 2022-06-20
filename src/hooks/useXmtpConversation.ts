@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 import { useXmtp } from './useXmtp';
 import { XmtpStatus } from 'contexts/XmtpContext';
+import { ContentTypeText } from 'utils/encoder';
 
 export enum ConversationStatus {
   waitingForClient = 'waiting for client',
@@ -107,9 +108,10 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
     async (message: string) => {
       if (!conversation) return;
       try {
-        await conversation.send(message);
+        // await conversation.send(message);
+        await conversation.send(message, { contentType: ContentTypeText });
       } catch (error) {
-        console.error('Caught an error with xmtp.conversations.send');
+        console.error('Caught an error with xmtp.conversations.send ', error);
       }
     },
     [conversation]

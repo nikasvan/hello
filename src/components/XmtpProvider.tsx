@@ -10,7 +10,7 @@ import { Client } from '@xmtp/xmtp-js';
 import Xmtp, { XmtpStatus } from 'contexts/XmtpContext';
 import { useSigner, useAccount } from 'wagmi';
 import { useRouter } from 'next/router';
-import { CustomEncoder } from 'utils/encoder';
+import { CustomEncoder } from 'utils/encoder-decoder';
 
 function usePreviousString(value: string | undefined) {
   const ref = useRef<string | undefined>();

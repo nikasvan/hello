@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 import { useXmtp } from './useXmtp';
 import { XmtpStatus } from 'contexts/XmtpContext';
-import { ContentTypeText } from 'utils/encoder';
+import { ContentTypeText } from 'utils/encoder-decoder';
 
 export enum ConversationStatus {
   waitingForClient = 'waiting for client',

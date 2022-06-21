@@ -25,7 +25,7 @@ export function useMetrics() {
         fromAddressHash: fromHash,
         toAddressHash: toHash,
       });
-      fetch('/api/metrics/sendMessage', { method: 'POST', body });
+      fetch('/api/metrics/sendMessageEvent', { method: 'POST', body });
     },
     []
   );

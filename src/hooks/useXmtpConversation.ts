@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 import { useXmtp } from './useXmtp';
 import { XmtpStatus } from 'contexts/XmtpContext';
-import { usePlausibleMetrics } from './useMetrics';
+import { useMetrics } from './useMetrics';
 
 export enum ConversationStatus {
   waitingForClient = 'waiting for client',
@@ -27,7 +27,7 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
     recordMessagesEvents,
     recordSendMessageEvent,
     recordPeerNotInitializedEvent,
-  } = usePlausibleMetrics();
+  } = useMetrics();
 
   useEffect(() => {
     const check = async () => {

@@ -12,7 +12,7 @@ model InitEvent {
   time         DateTime @default(now())
   address_hash String   @db.VarChar()
 
-  @@map("init_event")
+  @@map("init_events")
 }
 
 model PeerNotInitializedEvent {
@@ -20,17 +20,16 @@ model PeerNotInitializedEvent {
   time         DateTime @default(now())
   peer_address String   @db.VarChar()
 
-  @@map("peer_not_initialized_event")
+  @@map("peer_not_initialized_events")
 }
 
 model MessageEvent {
-  id                String   @id @default(uuid())
+  id_hash           String   @id @db.VarChar()
   time              DateTime @default(now())
   from_address_hash String   @db.VarChar()
   to_address_hash   String   @db.VarChar()
-  id_hash           String   @db.VarChar()
 
-  @@map("message_event")
+  @@map("message_events")
 }
 
 model SendMessageEvent {
@@ -39,16 +38,21 @@ model SendMessageEvent {
   from_address_hash String   @db.VarChar()
   to_address_hash   String   @db.VarChar()
 
-  @@map("send_message_event")
+  @@map("send_message_events")
 }
 
 model ConversationEvent {
-  id             String   @id @default(uuid())
-  time           DateTime @default(now())
   address_a_hash String   @db.VarChar()
   address_b_hash String   @db.VarChar()
+  time           DateTime @default(now())
 
-  @@map("conversation_event")
+  // TODO(achilles@daopanel.com) There should be an additional unique
+  // constraint on this table that cannot be modeled using prisma schema:
+  // when checking for uniqueness, we need to treat [X, Y] as the same
+  // conversation as [Y, X].
+
+  @@id([address_a_hash, address_b_hash])
+  @@map("conversation_events")
 }
 
 model CreateConversationEvent {
@@ -57,5 +61,5 @@ model CreateConversationEvent {
   from_address_hash String   @db.VarChar()
   to_address_hash   String   @db.VarChar()
 
-  @@map("create_conversation_event")
+  @@map("create_conversation_events")
 }

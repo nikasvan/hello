@@ -18,7 +18,10 @@ export default async function handler(
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = JSON.parse(req.body);
   try {
-    await prisma.messageEvent.createMany({ data });
+    await prisma.messageEvent.createMany({
+      data,
+      skipDuplicates: true,
+    });
     res.status(200).json(true);
   } catch (err) {
     res.status(500).json(false);

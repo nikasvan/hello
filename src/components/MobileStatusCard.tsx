@@ -98,7 +98,7 @@ const Subtitle = styled.h6`
   color: #dad0e6;
 `;
 
-const ReferSubtitle = styled.h6`
+const ReferSubtitle = styled.div`
   margin-top: 8px;
   font-weight: 400;
   font-size: 16px;

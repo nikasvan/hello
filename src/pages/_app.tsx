@@ -15,7 +15,7 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { useEffect } from 'react';
 import PlausibleProvider from 'next-plausible';
-import { Env } from 'config';
+import { Plausible } from 'config';
 
 const alchemyKey = 'kmMb00nhQ0SWModX6lJLjXy_pVtiQnjx';
 
@@ -85,9 +85,13 @@ export default function App({ Component, pageProps }: AppProps) {
     };
     CheckForNotification();
   }, []);
+
   return (
     <ThemeProvider theme={theme}>
-      <PlausibleProvider enabled={Env.enablePlausible()} domain={Env.domain()}>
+      <PlausibleProvider
+        enabled={Plausible.enabled()}
+        domain={Plausible.domain()}
+        trackLocalhost={Plausible.trackLocalhost()}>
         <WagmiProvider client={wagmi}>
           <XmtpProvider>
             <RedirectProvider>

@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model InitEvent {
+  id           String   @id @default(uuid())
+  time         DateTime @default(now())
+  address_hash String   @db.VarChar()
+
+  @@map("init_event")
+}
+
+model PeerNotInitializedEvent {
+  id           String   @id @default(uuid())
+  time         DateTime @default(now())
+  peer_address String   @db.VarChar()
+
+  @@map("peer_not_initialized_event")
+}
+
+model MessageEvent {
+  id                String   @id @default(uuid())
+  time              DateTime @default(now())
+  from_address_hash String   @db.VarChar()
+  to_address_hash   String   @db.VarChar()
+  id_hash           String   @db.VarChar()
+
+  @@map("message_event")
+}
+
+model SendMessageEvent {
+  id                String   @id @default(uuid())
+  time              DateTime @default(now())
+  from_address_hash String   @db.VarChar()
+  to_address_hash   String   @db.VarChar()
+
+  @@map("send_message_event")
+}
+
+model ConversationEvent {
+  id             String   @id @default(uuid())
+  time           DateTime @default(now())
+  address_a_hash String   @db.VarChar()
+  address_b_hash String   @db.VarChar()
+
+  @@map("conversation_event")
+}
+
+model CreateConversationEvent {
+  id                String   @id @default(uuid())
+  time              DateTime @default(now())
+  from_address_hash String   @db.VarChar()
+  to_address_hash   String   @db.VarChar()
+
+  @@map("create_conversation_event")
+}

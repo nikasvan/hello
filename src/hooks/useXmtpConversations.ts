@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import { useXmtp } from './useXmtp';
 import { Conversation, Stream } from '@xmtp/xmtp-js';
+import { useMetrics } from './useMetrics';
 
 export enum ConversationsStatus {
   loading = 'loading',
@@ -9,6 +10,7 @@ export enum ConversationsStatus {
 }
 
 export function useXmtpConversations() {
+  const { recordConversationsEvents } = useMetrics();
   const { client: xmtp } = useXmtp();
   const [conversations, dispatchConversations] = useReducer(
     addConversation,
@@ -27,12 +29,17 @@ export function useXmtpConversations() {
       } catch (error) {
         console.error('Caught an error with xmtp.conversations.list');
       }
+      try {
+        recordConversationsEvents(convs);
+      } catch (error) {
+        console.error('Caught an error with recording conversations');
+      }
 
       dispatchConversations(convs);
       setIsLoading(false);
     };
     listConversations();
-  }, [xmtp]);
+  }, [xmtp, recordConversationsEvents]);
 
   // Then we tell xmtp to stream us new conversations.
   useEffect(() => {

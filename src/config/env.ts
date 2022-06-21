@@ -28,10 +28,6 @@ export class Env {
     return 'localhost:3000';
   }
 
-  public static enablePlausible() {
-    return Boolean(process.env.NEXT_PUBLIC_ENABLE_PLAUSIBLE);
-  }
-
   public static toString() {
     return `
       isMain: ${Env.isMain()}

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 import { useXmtp } from './useXmtp';
 import { XmtpStatus } from 'contexts/XmtpContext';
+import { usePlausibleMetrics } from './useMetrics';
 
 export enum ConversationStatus {
   waitingForClient = 'waiting for client',
@@ -22,6 +23,11 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
   const [isPeerInitialized, setIsPeerInitialized] = useState<
     boolean | undefined
   >(undefined);
+  const {
+    recordMessagesEvents,
+    recordSendMessageEvent,
+    recordPeerNotInitializedEvent,
+  } = usePlausibleMetrics();
 
   useEffect(() => {
     const check = async () => {
@@ -29,6 +35,13 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
         if (peerAddress) {
           try {
             const result = await xmtp.canMessage(peerAddress);
+            if (Boolean(result) === false) {
+              try {
+                await recordPeerNotInitializedEvent(peerAddress);
+              } catch (err) {
+                console.error('Caught an error with recordPeerNotInitialized');
+              }
+            }
             setIsPeerInitialized(result || false);
           } catch (err) {
             console.error('Caught an error with xmtp.canMessage');
@@ -38,7 +51,7 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
       }
     };
     check();
-  }, [xmtp, peerAddress]);
+  }, [xmtp, peerAddress, recordPeerNotInitializedEvent]);
 
   useEffect(() => {
     const getConvo = async () => {
@@ -64,13 +77,18 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
       let msgs: Message[] = [];
       try {
         msgs = await conversation.messages({ pageSize: 100 });
+        try {
+          recordMessagesEvents(msgs);
+        } catch (error) {
+          console.error('Caught an error with recordMessagesEvents');
+        }
       } catch (error) {
         console.error('Caught an error with xmtp.conversations.messages');
       }
       setMessages(msgs);
     };
     listMessages();
-  }, [conversation]);
+  }, [conversation, recordMessagesEvents]);
 
   // Then we tell xmtp to continue streaming us messages from the conversation.
   useEffect(() => {
@@ -108,11 +126,18 @@ export function useXmtpConversation(peerAddress: string | null | undefined) {
       if (!conversation) return;
       try {
         await conversation.send(message);
+        try {
+          if (xmtp) {
+            recordSendMessageEvent(xmtp.address, conversation.peerAddress);
+          }
+        } catch (error) {
+          console.error('Caught an error with recordSendMessageEvent');
+        }
       } catch (error) {
         console.error('Caught an error with xmtp.conversations.send');
       }
     },
-    [conversation]
+    [conversation, recordSendMessageEvent, xmtp]
   );
 
   const status = useMemo(() => {

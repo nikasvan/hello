@@ -11,7 +11,7 @@ export const initialize = async (
   onClientError: (error: unknown) => unknown,
   onNewConversation: (conversation: Conversation) => unknown,
   onConversationsLoaded: (conversations: Conversation[]) => unknown,
-  onNewMessage: (message: Message) => unknown,
+  onNewMessage: (conversation: Conversation, message: Message) => unknown,
   onNewGroupMessage: (message: GroupMessage) => unknown,
   onMessagesLoaded: () => unknown
 ) => {
@@ -73,7 +73,7 @@ export const initialize = async (
 const loadConversation = async (
   conversation: Conversation,
   onNewConversation: (conversation: Conversation) => unknown,
-  onNewMessage: (message: Message) => unknown,
+  onNewMessage: (conversation: Conversation, message: Message) => unknown,
   onNewGroupMessage: (message: GroupMessage) => unknown,
   waitForMessagesMs = 0
 ) => {
@@ -84,7 +84,7 @@ const loadConversation = async (
     if (isGroupMessage(message)) {
       onNewGroupMessage(message);
     } else {
-      onNewMessage(message);
+      onNewMessage(conversation, message);
     }
   }
   onNewConversation(conversation);
@@ -92,7 +92,7 @@ const loadConversation = async (
 
 const streamConversation = async (
   conversation: Conversation,
-  onNewMessage: (message: Message) => unknown,
+  onNewMessage: (conversation: Conversation, message: Message) => unknown,
   onNewGroupMessage: (message: GroupMessage) => unknown
 ) => {
   // TODO This might be a bug in XMTP, reach out to them.
@@ -102,7 +102,7 @@ const streamConversation = async (
     if (isGroupMessage(message)) {
       onNewGroupMessage(message);
     } else {
-      onNewMessage(message);
+      onNewMessage(conversation, message);
     }
   }
 };

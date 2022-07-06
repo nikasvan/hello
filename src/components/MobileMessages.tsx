@@ -238,12 +238,6 @@ const Page = styled.div`
   display: flex;
   flex-direction: column;
   background: #100817;
-  background: url(${background.src}) repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  object-fit: cover;
   position: fixed;
   top: 0;
   left: 0;

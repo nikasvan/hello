@@ -12,7 +12,7 @@ interface MobileMessagesBucketProps {
 }
 
 export default function MobileMessagesBucket(props: MobileMessagesBucketProps) {
-  const sentByMe = props.sentByAddress === props.peerAddress;
+  const sentByMe = props.sentByAddress !== props.peerAddress;
   if (props.messages.length === 0) return null;
 
   return (

@@ -101,25 +101,26 @@ export const XmtpContextProvider: FunctionComponent<{
   }, []);
 
   const handleNewMessage = useCallback(
-    (message: Message) => {
-      const { recipientAddress, sent } = message;
-      if (recipientAddress === undefined || sent === undefined) {
+    (conversation: Conversation, message: Message) => {
+      const { sent } = message;
+      const { peerAddress } = conversation;
+      if (sent === undefined) {
         return;
       } else {
         // TODO You need to incorporate activity into group messages also.
         setActivity((prev) => {
-          if (prev[recipientAddress] === undefined) {
-            prev[recipientAddress] = sent;
+          if (prev[peerAddress] === undefined) {
+            prev[peerAddress] = sent;
           } else {
-            if (prev[recipientAddress].getTime() < sent.getTime()) {
-              prev[recipientAddress] = sent;
+            if (prev[peerAddress].getTime() < sent.getTime()) {
+              prev[peerAddress] = sent;
             }
           }
           return prev;
         });
         return setMessages((prev) => {
-          prev[recipientAddress] = prev[recipientAddress] || {};
-          prev[recipientAddress][message.id] = message;
+          prev[peerAddress] = prev[peerAddress] || {};
+          prev[peerAddress][message.id] = message;
           return prev;
         });
       }

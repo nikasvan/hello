@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Message } from '@xmtp/xmtp-js';
 import MessageBubble from './MessageBubble';
 import MobileMessageSentBy from './MobileMessageSentBy';
+import { isGroupMessage } from 'xmtp-react/groups';
 
 interface MobileMessagesBucketProps {
   peerAddress: string;
@@ -11,7 +12,7 @@ interface MobileMessagesBucketProps {
 }
 
 export default function MobileMessagesBucket(props: MobileMessagesBucketProps) {
-  const sentByMe = props.sentByAddress !== props.peerAddress;
+  const sentByMe = props.sentByAddress === props.peerAddress;
   if (props.messages.length === 0) return null;
 
   return (
@@ -20,7 +21,11 @@ export default function MobileMessagesBucket(props: MobileMessagesBucketProps) {
         return (
           <MessagePosition key={message.id} right={sentByMe}>
             <MessageBubble
-              message={message.content}
+              message={
+                isGroupMessage(message)
+                  ? message.content.payload
+                  : message.content
+              }
               backgroundColor={sentByMe ? '#50456f' : '#231A3A'}
             />
           </MessagePosition>

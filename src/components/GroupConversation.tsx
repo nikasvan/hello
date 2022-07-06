@@ -1,64 +1,46 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import styled from 'styled-components';
-import { useEnsName } from 'wagmi';
+// import { useEnsName } from 'wagmi';
 import Text from './Text';
 import { useRouter } from 'next/router';
 import Avatar from './Avatar';
-import MobileLoadingText from 'components/MobileLoadingText';
+// import MobileLoadingText from 'components/MobileLoadingText';
 import { shortDate } from 'utils/date';
-import { useMessages, getLastMessage } from 'xmtp-react/conversations';
+import { useGroupMessages } from 'xmtp-react/groups';
 
-interface ConversationProps {
-  peerAddress: string;
+interface GroupConversationProps {
+  groupId: string;
 }
 
-export default function Conversation(props: ConversationProps) {
-  const messages = useMessages(props.peerAddress);
-  const { data: ensName, isLoading } = useEnsName({
-    address: props.peerAddress,
-  });
-  // const prevMessagesCount = usePreviousVal(messages.length);
-  const lastMessage = getLastMessage(messages);
+export default function GroupConversation(props: GroupConversationProps) {
+  const messages = useGroupMessages(props.groupId);
+  const lastMessage = Object.values(messages)[0];
   const router = useRouter();
 
   const goToConversation = useCallback(() => {
-    router.push(`/${ensName || props.peerAddress}`);
-  }, [ensName, props.peerAddress, router]);
+    router.push(`/g/${props.groupId}`);
+  }, [props.groupId, router]);
 
   return (
     <Container onClick={goToConversation} isRequest={false}>
       <div>
         <div>
-          <Avatar address={props.peerAddress} />
+          <Avatar address={props.groupId} />
         </div>
         <div>
-          {isLoading && <MobileLoadingText />}
-          {isLoading || (
-            <StyledTitle
-              tag="span"
-              text={ensName ? ensName : shortAddress(props.peerAddress)}
-            />
-          )}
-          {lastMessage === undefined ? (
-            <MobileLoadingText />
-          ) : (
-            <StyledSubTitle
-              tag="span"
-              text={previewMessage(`${lastMessage?.content}`)}
-            />
-          )}
+          <StyledTitle tag="span" text={props.groupId} />
+          <StyledSubTitle
+            tag="span"
+            text={previewMessage(`${lastMessage?.content.payload}`)}
+          />
         </div>
       </div>
       <div>
-        {lastMessage == undefined ? (
-          <MobileLoadingText />
-        ) : (
-          <StyledText
-            tag="span"
-            text={`${shortDate(lastMessage?.sent)}`}
-            isRequest={false}
-          />
-        )}
+        <StyledText
+          tag="span"
+          text={`${shortDate(lastMessage?.sent)}`}
+          isRequest={false}
+        />
       </div>
     </Container>
   );

@@ -1,12 +1,5 @@
-import {
-  useXmtpConversation,
-  ConversationStatus,
-  useXmtp,
-  useActiveTab,
-  usePreviousVal,
-  useDeviceDetect,
-} from 'hooks';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useActiveTab, usePreviousVal, useDeviceDetect } from 'hooks';
+import { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 import MobileMessagesHeader from './MobileMessagesHeader';
 import MobileMessageInput from './MobileMessageInput';
@@ -15,75 +8,88 @@ import { Message } from '@xmtp/xmtp-js';
 import MobileMessagesBucket from './MobileMessagesBucket';
 import MobileLoadingMessages from './MobileLoadingMessages';
 import MobileMenu from './MobileMenu';
-import { XmtpStatus } from 'contexts/XmtpContext';
+import { Status, useXmtp } from 'xmtp-react/context';
+import {
+  useMessages,
+  useSendMessage,
+  Status as SendMessageStatus,
+} from 'xmtp-react/conversations';
 import MobileStatusCard from './MobileStatusCard';
 import { useRouterEnsData } from 'hooks';
 import MobileLoadingEnsName from './MobileLoadingEnsName';
+import background from '../../public/assets/images/Artboard1.png';
 
 export default function Messages() {
   const { isMobile } = useDeviceDetect();
 
-  const { init, status: xmtpStatus } = useXmtp();
+  const xmtp = useXmtp();
   const router = useRouter();
   const {
     name: peerEnsName,
     address: peerAddress,
     isLoading,
   } = useRouterEnsData();
-  const { messages, status, sendMessage } = useXmtpConversation(peerAddress);
-  const { visibilityState: isTabVisible } = useActiveTab();
-  const prevMessagesCount = usePreviousVal(messages.length);
+  const messages = useMessages(peerAddress);
+  const sendMessage = useSendMessage();
+  // const { visibilityState: isTabVisible } = useActiveTab();
+  // const prevMessagesCount = usePreviousVal(messages.length);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const divScrollToRef = useRef<HTMLInputElement>(null);
 
   const openMenu = useCallback(() => setShowMenu(true), [setShowMenu]);
   const closeMenu = useCallback(() => setShowMenu(false), [setShowMenu]);
 
-  const scrollToBottom = useCallback(() => {
-    if (divScrollToRef.current) {
-      divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [divScrollToRef]);
+  // const scrollToBottom = useCallback(() => {
+  //   if (divScrollToRef.current) {
+  //     divScrollToRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [divScrollToRef]);
 
-  useEffect(() => {
-    if (status === ConversationStatus.ready) {
-      scrollToBottom();
-    }
-  }, [status, scrollToBottom]);
+  // useEffect(() => {
+  //   if (status === ConversationStatus.ready) {
+  //     scrollToBottom();
+  //   }
+  // }, [status, scrollToBottom]);
 
-  const sendNewMessageNotification = useCallback(
-    (messages) => {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.recipientAddress !== peerAddress) {
-        new Notification(
-          `Received new Message from ${peerEnsName || peerAddress}`,
-          {
-            body: messages[messages.length - 1]?.content,
-          }
-        );
-      }
-    },
-    [peerAddress, peerEnsName]
-  );
+  // const sendNewMessageNotification = useCallback(
+  //   (messages) => {
+  //     const lastMessage = messages[messages.length - 1];
+  //     if (lastMessage.recipientAddress !== peerAddress) {
+  //       new Notification(
+  //         `Received new Message from ${peerEnsName || peerAddress}`,
+  //         {
+  //           body: messages[messages.length - 1]?.content,
+  //         }
+  //       );
+  //     }
+  //   },
+  //   [peerAddress, peerEnsName]
+  // );
 
-  useEffect(() => {
-    if (
-      messages.length > 0 && !isTabVisible && prevMessagesCount
-        ? prevMessagesCount < messages.length
-        : false
-    ) {
-      sendNewMessageNotification(messages);
-    }
-  }, [isTabVisible, messages, prevMessagesCount, sendNewMessageNotification]);
+  // useEffect(() => {
+  //   if (
+  //     messages.length > 0 && !isTabVisible && prevMessagesCount
+  //       ? prevMessagesCount < messages.length
+  //       : false
+  //   ) {
+  //     sendNewMessageNotification(messages);
+  //   }
+  // }, [isTabVisible, messages, prevMessagesCount, sendNewMessageNotification]);
 
   const doSendMessage = useCallback(
-    (message: string) => {
-      sendMessage(message);
+    async (message: string) => {
+      if (peerAddress && sendMessage.status === SendMessageStatus.ready) {
+        sendMessage.send(peerAddress, message);
+      }
     },
-    [sendMessage]
+    [sendMessage, peerAddress]
   );
 
-  const buckets = getMessageBuckets(messages.map((x) => x).reverse());
+  const buckets = getMessageBuckets(
+    Object.values(messages)
+      .map((x) => x)
+      .reverse()
+  );
 
   const goToConversations = useCallback(() => {
     router.push('/conversations');
@@ -94,6 +100,7 @@ export default function Messages() {
       <>
         <MobileMessagesHeader
           onMenuClick={openMenu}
+          onClickBack={goToConversations}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <MobileLoadingEnsName />;
@@ -104,6 +111,7 @@ export default function Messages() {
     return (
       <Page>
         <MobileMessagesHeader
+          onClickBack={goToConversations}
           onMenuClick={openMenu}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
@@ -126,24 +134,11 @@ export default function Messages() {
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
       <MobileMessagesHeader
+        onClickBack={goToConversations}
         onMenuClick={openMenu}
         titleText={peerEnsName || peerAddress || 'N/A'}
       />
-      {xmtpStatus === XmtpStatus.ready || (
-        <Centered>
-          <MobileStatusCard
-            title="Initialize XMTP Client..."
-            subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
-            buttonText="Initialize Client"
-            isLoading={xmtpStatus === XmtpStatus.loading}
-            isError={xmtpStatus === XmtpStatus.denied}
-            errorText={'Signature request cancelled. Try again...'}
-            loadingText="Awaiting signature..."
-            onClick={init}
-          />
-        </Centered>
-      )}
-      {status === ConversationStatus.noPeerAvailable && (
+      {/* {status === ConversationStatus.noPeerAvailable && (
         <Centered>
           <MobileStatusCard
             noPeerAvailable
@@ -157,11 +152,53 @@ export default function Messages() {
             onClick={goToConversations}
           />
         </Centered>
+      )} */}
+      {xmtp.status === Status.idle && (
+        <Centered>
+          <MobileStatusCard
+            title="Initialize XMTP Client..."
+            subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
+            buttonText="Initialize Client"
+            isLoading={false}
+            isError={false}
+            errorText={'Signature request cancelled. Try again...'}
+            loadingText="Awaiting signature..."
+            onClick={xmtp.init}
+          />
+        </Centered>
       )}
-      {status === ConversationStatus.loadingMessages && (
+      {xmtp.status === Status.waiting && (
+        <Centered>
+          <MobileStatusCard
+            title="Initialize XMTP Client..."
+            subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
+            buttonText="Initialize Client"
+            isLoading={true}
+            isError={false}
+            errorText={'Signature request cancelled. Try again...'}
+            loadingText="Awaiting signature..."
+            onClick={() => null}
+          />
+        </Centered>
+      )}
+      {xmtp.status === Status.denied && (
+        <Centered>
+          <MobileStatusCard
+            title="Initialize XMTP Client..."
+            subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
+            buttonText="Initialize Client"
+            isLoading={false}
+            isError={true}
+            errorText={'Signature request cancelled. Try again...'}
+            loadingText="Awaiting signature..."
+            onClick={xmtp.init}
+          />
+        </Centered>
+      )}
+      {xmtp.status === Status.loading && (
         <MobileLoadingMessages isMobile={isMobile} />
       )}
-      {status === ConversationStatus.ready && (
+      {xmtp.status === Status.ready && (
         <List isMobile={isMobile}>
           <div ref={divScrollToRef}></div>
           {buckets.map((bucketMessages, index) => {
@@ -181,9 +218,9 @@ export default function Messages() {
         </List>
       )}
 
-      {(status === ConversationStatus.loadingMessages ||
-        status === ConversationStatus.ready ||
-        status === ConversationStatus.noMessages) && (
+      {(xmtp.status === Status.loading ||
+        xmtp.status === Status.ready ||
+        Object.keys(messages).length === 0) && (
         <FixedFooter>
           <MobileMessageInput
             onSendMessage={doSendMessage}
@@ -198,9 +235,19 @@ export default function Messages() {
 const Page = styled.div`
   height: 100%;
   width: 100vw;
-  background: #100817;
   display: flex;
   flex-direction: column;
+  background: #100817;
+  background: url(${background.src}) repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: scroll;
 `;
 
 const List = styled.ul<{ isMobile: boolean }>`

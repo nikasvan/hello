@@ -109,22 +109,5 @@ const ModalBody = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.colors.white};
 `;
-// Buttons styles are below if needed
-
-// const ModalFooter = styled.div`
-//   padding: 10px 0px;
-//   text-align: right;
-// `;
-
-// const Button = styled.button`
-//   background: #7b2cbf;
-//   color: white;
-//   font-size: 1em;
-//   margin: 10px;
-//   padding: 5px 10px;
-//   border: 2px solid #7b2cbf;
-//   border-radius: 5px;
-//   cursor: pointer;
-// `;
 
 export default Modal;

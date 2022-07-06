@@ -1,9 +1,9 @@
 import { Conversation, Message } from '@xmtp/xmtp-js';
 import { useCallback } from 'react';
-import { useXmtp } from './useXmtp';
+import { Status, useXmtp } from 'xmtp-react/context';
 
 export function useMetrics() {
-  const { client } = useXmtp();
+  const xmtp = useXmtp();
 
   const recordInitEvent = useCallback(async (address: string) => {
     // Hash the address to avoid sending any PII
@@ -66,11 +66,11 @@ export function useMetrics() {
 
   const recordConversationsEvents = useCallback(
     async (conversations: Conversation[]) => {
-      if (client) {
+      if (xmtp.status === Status.ready) {
         const eventData = [];
         for (const convo of conversations) {
           // Hash the address to avoid sending any PII
-          const addressAHash = await sha256(client.address);
+          const addressAHash = await sha256(xmtp.client.address);
           const addressBHash = await sha256(convo.peerAddress);
           eventData.push({
             address_a_hash: addressAHash,
@@ -83,7 +83,7 @@ export function useMetrics() {
         });
       }
     },
-    [client]
+    [xmtp]
   );
 
   return {

@@ -29,13 +29,18 @@
     "react-device-detect": "2.2.2",
     "react-dom": "17.0.2",
     "react-i18next": "^11.16.7",
+    "react-modal": "^3.15.1",
     "styled-components": "^5.3.5",
+    "use-immer": "^0.7.0",
+    "uuid": "^8.3.2",
     "wagmi": "^0.3.1"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
     "@types/react": "17.0.40",
+    "@types/react-modal": "^3.13.1",
     "@types/styled-components": "^5.1.24",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
     "eslint": "8.12.0",

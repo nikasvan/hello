@@ -23,7 +23,11 @@ const ComingSoon = ({ text }: ComingSoonProps) => {
   return (
     <Page>
       <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
-      <MobileMessagesHeader onMenuClick={openMenu} titleText={text} />
+      <MobileMessagesHeader
+        onClickBack={() => router.back()}
+        onMenuClick={openMenu}
+        titleText={text}
+      />
       <Centered>
         <MobileStatusCard
           title="Feature under development..."

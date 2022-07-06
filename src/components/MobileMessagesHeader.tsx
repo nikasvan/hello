@@ -2,18 +2,20 @@ import styled from 'styled-components';
 import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import useCopyClipboard from 'hooks/useCopyClipboard';
 
 interface MobileMessageHeaderProps {
   titleText: string;
   onMenuClick: () => unknown;
+  onClickBack: () => unknown;
 }
 
 export default function MobileMessagesHeader({
   titleText,
   onMenuClick,
+  onClickBack,
 }: MobileMessageHeaderProps) {
-  const router = useRouter();
+  const [isCopied, doCopy] = useCopyClipboard();
   return (
     <MobileFixedHeader>
       <Menu
@@ -22,12 +24,17 @@ export default function MobileMessagesHeader({
         src={'/assets/images/MobileWhiteHamburgerMenu.svg'}
         onClick={onMenuClick}
       />
-      <UserDisplay>{shortAddress(titleText)}</UserDisplay>
+      {isCopied || (
+        <UserDisplay onClick={() => doCopy(titleText)}>
+          {shortAddress(titleText)}
+        </UserDisplay>
+      )}
+      {isCopied && <Copied>Copied!</Copied>}
       <GoBack
         width={20}
         height={20}
         src={ArrowLeftWhite}
-        onClick={() => router.push('/conversations')}
+        onClick={onClickBack}
       />
     </MobileFixedHeader>
   );
@@ -46,6 +53,16 @@ const UserDisplay = styled.h1`
   order: 0;
   flex-grow: 0;
   margin: 0px 16px;
+  cursor: pointer;
+  :hover {
+    margin-bottom: 4px;
+  }
+`;
+
+const Copied = styled(UserDisplay)`
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
 `;
 
 const GoBack = styled(Image)`

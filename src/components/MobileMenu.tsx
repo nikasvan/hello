@@ -108,6 +108,20 @@ export default function MobileMenu({
             </MenuItemDescription>
           </MenuItem>
         </Link>
+        <Link href={'/groups'} passHref>
+          <MenuItem>
+            <Image
+              src={'/assets/images/group.svg'}
+              width={40}
+              height={40}
+              alt="groups"
+            />
+            <MenuItemDescription>
+              <PrimaryText>Groups</PrimaryText>
+              <SecondaryText>View all group conversations...</SecondaryText>
+            </MenuItemDescription>
+          </MenuItem>
+        </Link>
         <Link href={'/requests'} passHref>
           <MenuItem>
             <Image

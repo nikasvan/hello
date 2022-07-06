@@ -1,7 +1,7 @@
 import { providers } from 'ethers';
 import { ThemeProvider } from 'styled-components';
 import type { AppProps } from 'next/app';
-import XmtpProvider from 'components/XmtpProvider';
+import { XmtpContextProvider } from 'xmtp-react/context';
 import RedirectProvider from 'components/RedirectProvider';
 import { GlobalStyles, theme } from 'styles/global';
 import {
@@ -93,14 +93,14 @@ export default function App({ Component, pageProps }: AppProps) {
         domain={Plausible.domain()}
         trackLocalhost={Plausible.trackLocalhost()}>
         <WagmiProvider client={wagmi}>
-          <XmtpProvider>
+          <XmtpContextProvider>
             <RedirectProvider>
               <>
                 <GlobalStyles />
                 <Component {...pageProps} />
               </>
             </RedirectProvider>
-          </XmtpProvider>
+          </XmtpContextProvider>
         </WagmiProvider>
       </PlausibleProvider>
     </ThemeProvider>

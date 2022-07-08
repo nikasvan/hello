@@ -58,9 +58,7 @@ export default function Landing() {
       if (doRedirectBack) {
         doRedirectBack();
       } else {
-        if (userDidConnect) {
-          router.push('/conversations');
-        }
+        router.push('/conversations');
       }
     }
     /* eslint-disable-next-line */

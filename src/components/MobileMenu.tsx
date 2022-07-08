@@ -75,9 +75,8 @@ export default function MobileMenu({
       onTouchMove={onTouchMove}
       showMenu={showMenu}
       ref={slider}>
-      <MobileBetaStatus />
       <Header>
-        <WordMark>Hello.</WordMark>
+        <MobileBetaStatusReg />
         <ClickableImage
           src="/assets/images/ArrowLeftWhite.svg"
           height={20}
@@ -262,4 +261,8 @@ const ConnectedWrapper = styled.div`
 
 const ClickableImage = styled(Image)`
   cursor: pointer;
+`;
+
+const MobileBetaStatusReg = styled(MobileBetaStatus)`
+  position: initial;
 `;

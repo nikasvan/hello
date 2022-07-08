@@ -3,9 +3,13 @@ import Image from 'next/image';
 import Github from './Github';
 import MirrorWhite from '../../public/assets/images/mirror-white.png';
 
-export default function MobileBetaStatus() {
+interface MobileBetaStatusProps {
+  className?: string;
+}
+
+export default function MobileBetaStatus({ className }: MobileBetaStatusProps) {
   return (
-    <BottomRight>
+    <BottomRight className={className}>
       <a href="https://www.daopanel.com/" target="_blank" rel="noreferrer">
         <Image
           src="/assets/images/whiteonly.png"

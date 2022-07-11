@@ -64,7 +64,7 @@ export default function GroupConversations() {
       <MobileConversationsHeader
         onClickMenu={doOpenMenu}
         onClickNewConversation={doNewConversation}
-        activeCategory={'All Messages'}
+        activeCategory={'Messages'}
       />
       {xmtp.status === Status.idle && (
         <Centered>

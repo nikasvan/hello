@@ -33,13 +33,10 @@ export default function MobileConnectedWallet(
   }
 
   const displayName = useMemo(() => {
-    if (ensName) {
+    if (ensName || props.address) {
+      const name = ensName || props.address || '';
       setIsConnected(true);
-      return width && width > 768 ? shortAddress(ensName) : ensName;
-    }
-    if (props.address) {
-      setIsConnected(true);
-      return width && width > 768 ? shortAddress(props.address) : props.address;
+      return width && width > 768 ? shortAddress(name) : name;
     } else {
       setIsConnected(false);
       return 'Please connect your wallet...';

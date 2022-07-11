@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import MobileLoadingText from './MobileLoadingText';
+import LoadingText from './LoadingText';
 
 interface ConnectorProps {
   defaultLogo: string;
@@ -22,7 +22,7 @@ export default function Connector(props: ConnectorProps) {
       <LogoContainer defaultLogo={defaultLogo} />
       <span>{name}</span>
       <ConnectStatus>
-        {props.connectState === 'connecting' && <MobileLoadingText />}
+        {props.connectState === 'connecting' && <LoadingText />}
       </ConnectStatus>
     </Container>
   );

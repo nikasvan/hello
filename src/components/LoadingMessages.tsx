@@ -1,11 +1,7 @@
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-export default function MobileLoadingMessages({
-  isMobile,
-}: {
-  isMobile: boolean;
-}) {
+export default function LoadingMessages({ isMobile }: { isMobile: boolean }) {
   const divScrollToRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

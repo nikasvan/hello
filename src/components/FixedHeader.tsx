@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MobileFixedHeader = styled.header`
+const FixedHeader = styled.header`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -13,4 +13,4 @@ const MobileFixedHeader = styled.header`
   background-color: ${({ theme }) => theme.colors.darkPurple};
 `;
 
-export default MobileFixedHeader;
+export default FixedHeader;

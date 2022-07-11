@@ -4,7 +4,7 @@ interface LoaderProps {
   height: number;
   width: number;
 }
-export default function Loader(props: LoaderProps) {
+export default function LoadingSpinner(props: LoaderProps) {
   const { height, width } = props;
 
   return (

@@ -3,13 +3,13 @@ import Avatar from './Avatar';
 import { useEnsName } from 'wagmi';
 import { shortDate } from 'utils/date';
 
-export interface MobileMessageSentByProps {
+export interface MessageSentByProps {
   address: string;
   sentAt: Date | undefined;
   sentByMe: boolean;
 }
 
-export default function MobileMessageSentBy(props: MobileMessageSentByProps) {
+export default function MessageSentBy(props: MessageSentByProps) {
   const { data: ensName } = useEnsName({ address: props.address });
   return (
     <Aligned>

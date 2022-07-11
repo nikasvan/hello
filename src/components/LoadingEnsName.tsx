@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import background from '../../public/assets/images/Artboard1.png';
 
-export default function MobileLoadingEnsName() {
+export default function LoadingEnsName() {
   return (
     <MainContainer>
       <Background></Background>

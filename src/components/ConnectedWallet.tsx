@@ -8,14 +8,13 @@ import { useEnsName } from 'wagmi';
 import door from '../../public/assets/images/exit-door-white.svg';
 import MobileExternalLink from '../../public/assets/images/MobileExternalLink';
 import MobileCopyAddress from '../../public/assets/images/MobileCopyAddress';
-interface MobileConnectedWalletProps {
+
+interface ConnectedWalletProps {
   address: string | undefined;
   onClickDisconnect: () => unknown;
   isLight?: boolean;
 }
-export default function MobileConnectedWallet(
-  props: MobileConnectedWalletProps
-) {
+export default function ConnectedWallet(props: ConnectedWalletProps) {
   const { data: ensName } = useEnsName({ address: props.address });
   const [isConnected, setIsConnected] = useState(false);
   const [isCopied, copyAddress] = useCopyAddress();

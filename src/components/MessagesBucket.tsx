@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Message } from '@xmtp/xmtp-js';
 import MessageBubble from './MessageBubble';
-import MobileMessageSentBy from './MobileMessageSentBy';
+import MessageSentBy from './MessageSentBy';
 import { isGroupMessage } from 'xmtp-react/groups';
 
 interface MobileMessagesBucketProps {
@@ -11,7 +11,7 @@ interface MobileMessagesBucketProps {
   messages: Message[];
 }
 
-export default function MobileMessagesBucket(props: MobileMessagesBucketProps) {
+export default function MessagesBucket(props: MobileMessagesBucketProps) {
   const sentByMe = props.sentByAddress !== props.peerAddress;
   if (props.messages.length === 0) return null;
 
@@ -32,7 +32,7 @@ export default function MobileMessagesBucket(props: MobileMessagesBucketProps) {
         );
       })}
       <SentByPosition right={sentByMe}>
-        <MobileMessageSentBy
+        <MessageSentBy
           sentByMe={sentByMe}
           address={String(props.sentByAddress)}
           sentAt={props.startDate}

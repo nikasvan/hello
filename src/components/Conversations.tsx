@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { useDeviceDetect } from 'hooks';
 import { Status, useXmtp } from 'xmtp-react/context';
 import Conversation from './Conversation';
-import MobileConversationsHeader from './MobileConversationsHeader';
-import MobileMenu from './MobileMenu';
+import ConversationsHeader from './ConversationsHeader';
+import Menu from './Menu';
 import CreateNewConversation from './CreateNewConversation';
-import MobileStatusCard from './MobileStatusCard';
-import MobileLoadingConversations from './MobileLoadingPage';
+import StatusCard from './StatusCard';
+import LoadingConversations from './LoadingConversations';
 import { useConversations } from 'xmtp-react/conversations';
 
 export default function Conversations() {
@@ -67,8 +67,8 @@ export default function Conversations() {
 
   return (
     <Page>
-      <MobileMenu showMenu={showMenu} onClickClose={doCloseMenu} />
-      <MobileConversationsHeader
+      <Menu showMenu={showMenu} onClickClose={doCloseMenu} />
+      <ConversationsHeader
         onClickMenu={doOpenMenu}
         onClickNewConversation={doNewConversation}
         activeCategory={'All Messages'}
@@ -78,7 +78,7 @@ export default function Conversations() {
       )}
       {xmtp.status === Status.idle && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -92,7 +92,7 @@ export default function Conversations() {
       )}
       {xmtp.status === Status.waiting && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -106,7 +106,7 @@ export default function Conversations() {
       )}
       {xmtp.status === Status.denied && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -121,7 +121,7 @@ export default function Conversations() {
       {xmtp.status === Status.ready &&
         Object.keys(xmtp.conversations).length === 0 && (
           <Centered>
-            <MobileStatusCard
+            <StatusCard
               title="No conversations found."
               subtitle="Send your first message to any ENS name or Eth address. Note: They will first have to sign their own XMTP message, so tell them to get on daopanel.chat! Or message us at trydaopanel.eth to try it out."
               buttonText="Create a Conversation"
@@ -139,7 +139,7 @@ export default function Conversations() {
             </MissingConversations>
           </Centered>
         )}
-      {xmtp.status === Status.loading && <MobileLoadingConversations />}
+      {xmtp.status === Status.loading && <LoadingConversations />}
       {xmtp.status === Status.ready && (
         <List isMobile={isMobile}>
           {conversations.map((peerAddress: string) => {

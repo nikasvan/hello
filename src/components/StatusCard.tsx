@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Loader from './LoadingSpinner';
 import Link from 'next/link';
 
-export interface MobileStatusCardProps {
+export interface StatusCardProps {
   title: string;
   subtitle: string;
   buttonText: string;
@@ -14,7 +14,7 @@ export interface MobileStatusCardProps {
   noPeerAvailable?: boolean;
   onClick: () => void;
 }
-export default function MobileStatusCard({
+export default function StatusCard({
   title,
   subtitle,
   buttonText,
@@ -24,7 +24,7 @@ export default function MobileStatusCard({
   errorText,
   noPeerAvailable = false,
   onClick,
-}: MobileStatusCardProps) {
+}: StatusCardProps) {
   return (
     <Card>
       {isLoading && (

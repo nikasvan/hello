@@ -1,22 +1,20 @@
 import styled from 'styled-components';
-import MobileMenu from '../../public/assets/images/MobileWhiteHamburgerMenu.svg';
+import Menu from '../../public/assets/images/MobileWhiteHamburgerMenu.svg';
 import NewConversation from '../../public/assets/images/MobileNewConversation.svg';
 import Image from 'next/image';
-import MobileFixedHeader from './MobileFixedHeader';
+import FixedHeader from './FixedHeader';
 
-interface MobileConversationsHeaderProps {
+interface ConversationsHeaderProps {
   onClickMenu: () => unknown;
   onClickNewConversation: () => unknown;
   activeCategory: string;
 }
 
-export default function MobileConversationsHeader(
-  props: MobileConversationsHeaderProps
-) {
+export default function ConversationsHeader(props: ConversationsHeaderProps) {
   return (
-    <MobileFixedHeader>
+    <FixedHeader>
       <ClickableImage
-        src={MobileMenu}
+        src={Menu}
         alt="menu"
         width={30}
         height={30}
@@ -30,7 +28,7 @@ export default function MobileConversationsHeader(
         height={20}
         onClick={props.onClickNewConversation}
       />
-    </MobileFixedHeader>
+    </FixedHeader>
   );
 }
 

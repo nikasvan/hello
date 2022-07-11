@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import background from '../../public/assets/images/Artboard1.png';
 
-export default function MobileLoadingConversations() {
+export default function LoadingConversations() {
   return (
     <MainContainer>
       <Background></Background>

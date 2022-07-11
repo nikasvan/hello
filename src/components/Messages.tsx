@@ -1,23 +1,22 @@
 import { useActiveTab, usePreviousVal, useDeviceDetect } from 'hooks';
 import { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
-import MobileMessagesHeader from './MobileMessagesHeader';
-import MobileMessageInput from './MobileMessageInput';
+import MessagesHeader from './MessagesHeader';
+import MessageInput from './MessageInput';
 import { useRouter } from 'next/router';
 import { Message } from '@xmtp/xmtp-js';
-import MobileMessagesBucket from './MobileMessagesBucket';
-import MobileLoadingMessages from './MobileLoadingMessages';
-import MobileMenu from './MobileMenu';
+import MessagesBucket from './MessagesBucket';
+import LoadingMessages from './LoadingMessages';
+import Menu from './Menu';
 import { Status, useXmtp } from 'xmtp-react/context';
 import {
   useMessages,
   useSendMessage,
   Status as SendMessageStatus,
 } from 'xmtp-react/conversations';
-import MobileStatusCard from './MobileStatusCard';
+import StatusCard from './StatusCard';
 import { useRouterEnsData } from 'hooks';
-import MobileLoadingEnsName from './MobileLoadingEnsName';
-import background from '../../public/assets/images/Artboard1.png';
+import LoadingEnsName from './LoadingEnsName';
 
 export default function Messages() {
   const { isMobile } = useDeviceDetect();
@@ -98,25 +97,25 @@ export default function Messages() {
   if (isLoading)
     return (
       <>
-        <MobileMessagesHeader
+        <MessagesHeader
           onMenuClick={openMenu}
           onClickBack={goToConversations}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
-        <MobileLoadingEnsName />;
+        <LoadingEnsName />;
       </>
     );
 
   if (typeof peerAddress !== 'string')
     return (
       <Page>
-        <MobileMessagesHeader
+        <MessagesHeader
           onClickBack={goToConversations}
           onMenuClick={openMenu}
           titleText={peerEnsName || peerAddress || 'N/A'}
         />
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Could not resolve ENS name"
             subtitle='Make sure to include the ".eth" suffix.'
             buttonText=""
@@ -132,15 +131,15 @@ export default function Messages() {
 
   return (
     <Page>
-      <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
-      <MobileMessagesHeader
+      <Menu onClickClose={closeMenu} showMenu={showMenu} />
+      <MessagesHeader
         onClickBack={goToConversations}
         onMenuClick={openMenu}
         titleText={peerEnsName || peerAddress || 'N/A'}
       />
       {/* {status === ConversationStatus.noPeerAvailable && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             noPeerAvailable
             title="Problem connecting to peer"
             subtitle="This address has not signed into XMTP yet."
@@ -155,7 +154,7 @@ export default function Messages() {
       )} */}
       {xmtp.status === Status.idle && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -169,7 +168,7 @@ export default function Messages() {
       )}
       {xmtp.status === Status.waiting && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -183,7 +182,7 @@ export default function Messages() {
       )}
       {xmtp.status === Status.denied && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -196,7 +195,7 @@ export default function Messages() {
         </Centered>
       )}
       {xmtp.status === Status.loading && (
-        <MobileLoadingMessages isMobile={isMobile} />
+        <LoadingMessages isMobile={isMobile} />
       )}
       {xmtp.status === Status.ready && (
         <List isMobile={isMobile}>
@@ -204,7 +203,7 @@ export default function Messages() {
           {buckets.map((bucketMessages, index) => {
             if (bucketMessages.length > 0) {
               return (
-                <MobileMessagesBucket
+                <MessagesBucket
                   key={index}
                   messages={bucketMessages}
                   peerAddress={peerAddress}
@@ -222,10 +221,7 @@ export default function Messages() {
         xmtp.status === Status.ready ||
         Object.keys(messages).length === 0) && (
         <FixedFooter>
-          <MobileMessageInput
-            onSendMessage={doSendMessage}
-            isMobile={isMobile}
-          />
+          <MessageInput onSendMessage={doSendMessage} isMobile={isMobile} />
         </FixedFooter>
       )}
     </Page>

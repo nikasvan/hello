@@ -1,21 +1,18 @@
 import styled from 'styled-components';
 import Image from 'next/image';
-import MobileConnectedWallet from './MobileConnectedWallet';
-import MobileBetaStatus from './MobileBetaStatus';
+import ConnectedWallet from './ConnectedWallet';
+import BetaStatus from './BetaStatus';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useRouter } from 'next/router';
 import { useCallback, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
-interface MobileMenuProps {
+interface MenuProps {
   onClickClose: () => unknown;
   showMenu: boolean;
 }
 
-export default function MobileMenu({
-  onClickClose,
-  showMenu,
-}: MobileMenuProps) {
+export default function Menu({ onClickClose, showMenu }: MenuProps) {
   const { data: accountData } = useAccount();
   const { disconnect } = useDisconnect();
   const router = useRouter();
@@ -75,7 +72,7 @@ export default function MobileMenu({
       onTouchMove={onTouchMove}
       showMenu={showMenu}
       ref={slider}>
-      <MobileBetaStatus />
+      <BetaStatus />
       <Header>
         <WordMark>Hello.</WordMark>
         <ClickableImage
@@ -87,7 +84,7 @@ export default function MobileMenu({
         />
       </Header>
       <ConnectedWrapper>
-        <MobileConnectedWallet
+        <ConnectedWallet
           isLight={true}
           address={`${accountData?.address}`}
           onClickDisconnect={goHome}

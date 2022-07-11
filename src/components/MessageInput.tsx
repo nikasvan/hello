@@ -1,22 +1,27 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import MessageSend from '../../../public/assets/images/MessageSend.svg';
-import MessageInputIcon from '../../../public/assets/images/MessageInput.svg';
-import Image from 'next/image';
+import MessageSendg from '../../public/assets/images/MessageSend';
+import TrashCang from '../../public/assets/images/MobileTrashCan';
 import React, { useCallback } from 'react';
 
 interface MessageInputProps {
+  isMobile: boolean;
   onSendMessage: (val: string) => unknown;
 }
 
-const MessageInput = ({ onSendMessage }: MessageInputProps) => {
+const MessageInput = ({ isMobile, onSendMessage }: MessageInputProps) => {
   const [inputVal, setInputVal] = useState<string>('');
+
+  const clearInput = useCallback(() => {
+    setInputVal('');
+  }, []);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputVal(e.target.value);
   }, []);
 
   const handleSend = useCallback(() => {
+    if (inputVal.length < 1) return;
     onSendMessage(inputVal);
     setInputVal('');
   }, [inputVal, onSendMessage]);
@@ -28,40 +33,50 @@ const MessageInput = ({ onSendMessage }: MessageInputProps) => {
     [handleSend]
   );
 
+  const inputTextCount = inputVal.length;
+
   return (
     <Container>
-      <Image alt="lable" src={MessageInputIcon} />
       <StyledInput
-        placeholder="Your message..."
+        placeholder="Type..."
         required
         value={inputVal}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        autoFocus={!isMobile}
       />
-      <Send alt="send" src={MessageSend} onClick={handleSend} />
+      <SvgContainer inputTextCount={inputTextCount} onClick={clearInput}>
+        <TrashCang />
+      </SvgContainer>
+      <SvgContainer inputTextCount={inputTextCount} onClick={handleSend}>
+        <MessageSendg />
+      </SvgContainer>
     </Container>
   );
 };
-
-const Send = styled(Image)`
-  cursor: pointer;
-`;
+interface StyleProps {
+  inputTextCount: number;
+}
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
   background: #100817;
   backdrop-filter: blur(100px);
   width: 100%;
-  height: 96px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  height: 68px;
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 20px;
+
+  @media (max-width: 335px) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 `;
 
 const StyledInput = styled.input`
   flex: 1;
-  margin-right: 10px;
-  margin-left: 24px;
-  border: 1px solid #eee;
   border-radius: 2px;
   background-color: transparent;
   border: none;
@@ -72,7 +87,19 @@ const StyledInput = styled.input`
   }
   color: white;
   font-size: 18px;
-  font-family: ${({ theme }) => theme.fontFamily.Inter};
+`;
+
+const SvgContainer = styled.div<StyleProps>`
+  cursor: pointer;
+
+  &:nth-of-type(2) > :first-child > :first-child {
+    stroke: ${({ inputTextCount }) =>
+      inputTextCount > 0 ? 'white' : '#75668c'};
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    display: none;
+  }
 `;
 
 export default MessageInput;

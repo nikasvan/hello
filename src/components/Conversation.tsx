@@ -4,7 +4,7 @@ import { useEnsName } from 'wagmi';
 import Text from './Text';
 import { useRouter } from 'next/router';
 import Avatar from './Avatar';
-import MobileLoadingText from 'components/MobileLoadingText';
+import LoadingText from 'components/LoadingText';
 import { shortDate } from 'utils/date';
 import { useMessages, getLastMessage } from 'xmtp-react/conversations';
 
@@ -32,7 +32,7 @@ export default function Conversation(props: ConversationProps) {
           <Avatar address={props.peerAddress} />
         </div>
         <div>
-          {isLoading && <MobileLoadingText />}
+          {isLoading && <LoadingText />}
           {isLoading || (
             <StyledTitle
               tag="span"
@@ -40,7 +40,7 @@ export default function Conversation(props: ConversationProps) {
             />
           )}
           {lastMessage === undefined ? (
-            <MobileLoadingText />
+            <LoadingText />
           ) : (
             <StyledSubTitle
               tag="span"
@@ -51,7 +51,7 @@ export default function Conversation(props: ConversationProps) {
       </div>
       <div>
         {lastMessage == undefined ? (
-          <MobileLoadingText />
+          <LoadingText />
         ) : (
           <StyledText
             tag="span"

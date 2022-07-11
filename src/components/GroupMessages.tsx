@@ -1,14 +1,14 @@
 import { useDeviceDetect } from 'hooks';
 import { FunctionComponent, useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
-import MobileMessagesHeader from './MobileMessagesHeader';
-import MobileMessageInput from './MobileMessageInput';
+import MessagesHeader from './MessagesHeader';
+import MessageInput from './MessageInput';
 import { useRouter } from 'next/router';
-import MobileMessagesBucket from './MobileMessagesBucket';
-import MobileLoadingMessages from './MobileLoadingMessages';
-import MobileMenu from './MobileMenu';
+import MessagesBucket from './MessagesBucket';
+import LoadingMessages from './LoadingMessages';
+import Menu from './Menu';
 import { Status, useXmtp } from 'xmtp-react/context';
-import MobileStatusCard from './MobileStatusCard';
+import StatusCard from './StatusCard';
 import { useGroupMessages, useGroups, useSendGroupMessage } from 'xmtp-react';
 
 export const GroupMessages: FunctionComponent = () => {
@@ -41,15 +41,15 @@ export const GroupMessages: FunctionComponent = () => {
 
   return (
     <Page>
-      <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
-      <MobileMessagesHeader
+      <Menu onClickClose={closeMenu} showMenu={showMenu} />
+      <MessagesHeader
         onMenuClick={openMenu}
         titleText={''}
         onClickBack={() => router.push('/groups')}
       />
       {xmtp.status === Status.idle && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -63,7 +63,7 @@ export const GroupMessages: FunctionComponent = () => {
       )}
       {xmtp.status === Status.waiting && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -77,7 +77,7 @@ export const GroupMessages: FunctionComponent = () => {
       )}
       {xmtp.status === Status.denied && (
         <Centered>
-          <MobileStatusCard
+          <StatusCard
             title="Initialize XMTP Client..."
             subtitle="To begin messaging, you must first initialize the XMTP client by signing a message."
             buttonText="Initialize Client"
@@ -90,7 +90,7 @@ export const GroupMessages: FunctionComponent = () => {
         </Centered>
       )}
       {xmtp.status === Status.loading && (
-        <MobileLoadingMessages isMobile={isMobile} />
+        <LoadingMessages isMobile={isMobile} />
       )}
       {xmtp.status === Status.ready && (
         <List isMobile={isMobile}>
@@ -98,7 +98,7 @@ export const GroupMessages: FunctionComponent = () => {
           {buckets.map((bucketMessages, index) => {
             if (bucketMessages.length > 0) {
               return (
-                <MobileMessagesBucket
+                <MessagesBucket
                   key={index}
                   messages={bucketMessages}
                   peerAddress={xmtp.client.address}
@@ -116,10 +116,7 @@ export const GroupMessages: FunctionComponent = () => {
         xmtp.status === Status.ready ||
         Object.keys(messages).length === 0) && (
         <FixedFooter>
-          <MobileMessageInput
-            onSendMessage={doSendMessage}
-            isMobile={isMobile}
-          />
+          <MessageInput onSendMessage={doSendMessage} isMobile={isMobile} />
         </FixedFooter>
       )}
     </Page>

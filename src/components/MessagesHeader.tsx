@@ -1,23 +1,23 @@
 import styled from 'styled-components';
 import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
-import MobileFixedHeader from './MobileFixedHeader';
+import FixedHeader from './FixedHeader';
 import Image from 'next/image';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 
-interface MobileMessageHeaderProps {
+interface MessagesHeaderProps {
   titleText: string;
   onMenuClick: () => unknown;
   onClickBack: () => unknown;
 }
 
-export default function MobileMessagesHeader({
+export default function MessagesHeader({
   titleText,
   onMenuClick,
   onClickBack,
-}: MobileMessageHeaderProps) {
+}: MessagesHeaderProps) {
   const [isCopied, doCopy] = useCopyClipboard();
   return (
-    <MobileFixedHeader>
+    <FixedHeader>
       <Menu
         width={30}
         height={30}
@@ -36,7 +36,7 @@ export default function MobileMessagesHeader({
         src={ArrowLeftWhite}
         onClick={onClickBack}
       />
-    </MobileFixedHeader>
+    </FixedHeader>
   );
 }
 

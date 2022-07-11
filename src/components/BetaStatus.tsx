@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Github from './Github';
 import MirrorWhite from '../../public/assets/images/mirror-white.png';
 
-export default function MobileBetaStatus() {
+export default function BetaStatus() {
   return (
     <BottomRight>
       <a href="https://www.daopanel.com/" target="_blank" rel="noreferrer">

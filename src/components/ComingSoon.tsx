@@ -1,6 +1,6 @@
-import MobileMenu from 'components/MobileMenu';
-import MobileMessagesHeader from 'components/MobileMessagesHeader';
-import MobileStatusCard from 'components/MobileStatusCard';
+import Menu from 'components/Menu';
+import MessagesHeader from 'components/MessagesHeader';
+import StatusCard from 'components/StatusCard';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -22,14 +22,14 @@ const ComingSoon = ({ text }: ComingSoonProps) => {
 
   return (
     <Page>
-      <MobileMenu onClickClose={closeMenu} showMenu={showMenu} />
-      <MobileMessagesHeader
+      <Menu onClickClose={closeMenu} showMenu={showMenu} />
+      <MessagesHeader
         onClickBack={() => router.back()}
         onMenuClick={openMenu}
         titleText={text}
       />
       <Centered>
-        <MobileStatusCard
+        <StatusCard
           title="Feature under development..."
           subtitle="Check back soon!"
           isLoading={false}

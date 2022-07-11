@@ -1,7 +1,7 @@
 import { useConnect } from 'wagmi';
 import { useEffect } from 'react';
 import { useRedirect } from 'hooks';
-import MobileMessages from 'components/MobileMessages';
+import Messages from 'components/Messages';
 
 export default function Page() {
   const { isConnected, isReconnecting } = useConnect();
@@ -13,5 +13,5 @@ export default function Page() {
     }
   }, [isConnected, isReconnecting, doRedirectAway]);
 
-  return <MobileMessages />;
+  return <Messages />;
 }

@@ -7,6 +7,7 @@ import Avatar from './Avatar';
 import MobileLoadingText from 'components/MobileLoadingText';
 import { shortDate } from 'utils/date';
 import { useMessages, getLastMessage } from 'xmtp-react/conversations';
+import { useWindowSize } from 'hooks';
 
 interface ConversationProps {
   peerAddress: string;
@@ -20,10 +21,28 @@ export default function Conversation(props: ConversationProps) {
   // const prevMessagesCount = usePreviousVal(messages.length);
   const lastMessage = getLastMessage(messages);
   const router = useRouter();
+  const { width } = useWindowSize();
 
   const goToConversation = useCallback(() => {
     router.push(`/${ensName || props.peerAddress}`);
   }, [ensName, props.peerAddress, router]);
+
+  const getName = useCallback(() => {
+    const hasEns = !!ensName;
+    let name = '';
+    if (hasEns) {
+      name =
+        width && width > 768
+          ? (ensName as string)
+          : shortAddress(ensName as string);
+    } else {
+      name =
+        width && width > 768
+          ? props.peerAddress
+          : shortAddress(props.peerAddress);
+    }
+    return name;
+  }, [ensName, props.peerAddress, width]);
 
   return (
     <Container onClick={goToConversation} isRequest={false}>
@@ -33,12 +52,7 @@ export default function Conversation(props: ConversationProps) {
         </div>
         <div>
           {isLoading && <MobileLoadingText />}
-          {isLoading || (
-            <StyledTitle
-              tag="span"
-              text={ensName ? ensName : shortAddress(props.peerAddress)}
-            />
-          )}
+          {isLoading || <StyledTitle tag="span" text={getName() as string} />}
           {lastMessage === undefined ? (
             <MobileLoadingText />
           ) : (
@@ -141,7 +155,7 @@ const StyledText = styled(Text)<{ isRequest: boolean }>`
 `;
 
 function shortAddress(str: string): string {
-  return str.slice(0, 6) + '...' + str.slice(-4);
+  return str ? str.slice(0, 6) + '...' + str.slice(-4) : '';
 }
 
 function previewMessage(message: string): string {

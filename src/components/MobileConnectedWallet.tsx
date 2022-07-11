@@ -8,6 +8,7 @@ import { useEnsName } from 'wagmi';
 import door from '../../public/assets/images/exit-door-white.svg';
 import MobileExternalLink from '../../public/assets/images/MobileExternalLink';
 import MobileCopyAddress from '../../public/assets/images/MobileCopyAddress';
+import { useWindowSize } from 'hooks';
 interface MobileConnectedWalletProps {
   address: string | undefined;
   onClickDisconnect: () => unknown;
@@ -20,6 +21,7 @@ export default function MobileConnectedWallet(
   const [isConnected, setIsConnected] = useState(false);
   const [isCopied, copyAddress] = useCopyAddress();
   const [currentUserEns, setCurrentUserEns] = useState<string | undefined>('');
+  const { width } = useWindowSize();
 
   //See notes under External Link for why this function exists
   function handleUrlClick() {
@@ -33,16 +35,16 @@ export default function MobileConnectedWallet(
   const displayName = useMemo(() => {
     if (ensName) {
       setIsConnected(true);
-      return shortAddress(ensName);
+      return width && width > 768 ? shortAddress(ensName) : ensName;
     }
     if (props.address) {
       setIsConnected(true);
-      return shortAddress(props.address);
+      return width && width > 768 ? shortAddress(props.address) : props.address;
     } else {
       setIsConnected(false);
       return 'Please connect your wallet...';
     }
-  }, [ensName, props.address]);
+  }, [ensName, props.address, width]);
 
   return (
     <Container isLight={props.isLight}>

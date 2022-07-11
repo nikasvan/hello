@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import Avatar from './Avatar';
 import { useEnsName } from 'wagmi';
 import { shortDate } from 'utils/date';
+import { useWindowSize } from 'hooks';
+import { useCallback } from 'react';
 
 export interface MobileMessageSentByProps {
   address: string;
@@ -11,13 +13,27 @@ export interface MobileMessageSentByProps {
 
 export default function MobileMessageSentBy(props: MobileMessageSentByProps) {
   const { data: ensName } = useEnsName({ address: props.address });
+  const { width } = useWindowSize();
+
+  const getName = useCallback(() => {
+    const hasEns = !!ensName;
+    let name = '';
+    if (hasEns) {
+      name =
+        width && width > 768
+          ? (ensName as string)
+          : shortAddress(ensName as string);
+    } else {
+      name = width && width > 768 ? props.address : shortAddress(props.address);
+    }
+    return name;
+  }, [ensName, props.address, width]);
+
   return (
     <Aligned>
       {props.sentByMe || <Avatar address={props.address} />}
       {props.sentByMe && <SentAt>{shortDate(props.sentAt)}</SentAt>}
-      <SentBy>
-        {props.sentByMe ? 'You' : shortAddress(ensName || props.address)}
-      </SentBy>
+      <SentBy>{props.sentByMe ? 'You' : getName()}</SentBy>
       {props.sentByMe && <Avatar address={props.address} />}
       {props.sentByMe || <SentAt>{shortDate(props.sentAt)}</SentAt>}
     </Aligned>

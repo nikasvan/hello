@@ -3,6 +3,8 @@ import ArrowLeftWhite from '../../public/assets/images/ArrowLeftWhite.svg';
 import MobileFixedHeader from './MobileFixedHeader';
 import Image from 'next/image';
 import useCopyClipboard from 'hooks/useCopyClipboard';
+import { useWindowSize } from 'hooks';
+import { useCallback } from 'react';
 
 interface MobileMessageHeaderProps {
   titleText: string;
@@ -16,6 +18,12 @@ export default function MobileMessagesHeader({
   onClickBack,
 }: MobileMessageHeaderProps) {
   const [isCopied, doCopy] = useCopyClipboard();
+  const { width } = useWindowSize();
+
+  const getName = useCallback(() => {
+    return width && width > 768 ? titleText : shortAddress(titleText);
+  }, [titleText, width]);
+
   return (
     <MobileFixedHeader>
       <Menu
@@ -25,9 +33,7 @@ export default function MobileMessagesHeader({
         onClick={onMenuClick}
       />
       {isCopied || (
-        <UserDisplay onClick={() => doCopy(titleText)}>
-          {shortAddress(titleText)}
-        </UserDisplay>
+        <UserDisplay onClick={() => doCopy(titleText)}>{getName()}</UserDisplay>
       )}
       {isCopied && <Copied>Copied!</Copied>}
       <GoBack

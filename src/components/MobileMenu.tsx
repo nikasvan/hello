@@ -103,7 +103,7 @@ export default function MobileMenu({
               alt="github"
             />
             <MenuItemDescription>
-              <PrimaryText>All Messages</PrimaryText>
+              <PrimaryText>Messages</PrimaryText>
               <SecondaryText>View all messages...</SecondaryText>
             </MenuItemDescription>
           </MenuItem>
